@@ -1,7 +1,10 @@
+#include<stdbool.h>
+
 typedef struct {
 	char *name;
 	unsigned short age;
 	char sex;
+	bool issingle;
 	float weight;
 } Person;
 
@@ -18,6 +21,7 @@ int main() {
 		person[i].name = "WangHua";
 		person[i].age = 18u;
 		person[i].sex = 'F';
+		person[i].issingle = true;
 		person[i].weight = 120.0f;
 	}
 
@@ -25,6 +29,7 @@ int main() {
 		printf("person[%d].name = %s\n", i, person[i].name);
 		printf("preson[%d].age = %u\n", i, person[i].age);
 		printf("perosn[%d].sex = %c\n", i, person[i].sex);
+		printf("person[%d].issingle = %d\n", i, person[i].issingle);
 		printf("person[%d].weight = %f\n", i, person[i].weight);
 	}
 	
