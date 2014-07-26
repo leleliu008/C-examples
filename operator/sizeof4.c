@@ -13,6 +13,7 @@ void yy(int a4[]) {
 int main() {
 	char a1[] = "abc";
 	int a2[3];
+	
 	printf("sizeof(a1) = %lu\n", sizeof(a1));
 	printf("sizeof(a2) = %lu\n", sizeof(a2));
 
