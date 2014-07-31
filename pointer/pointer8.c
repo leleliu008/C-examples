@@ -1,3 +1,5 @@
+/* 函数指针测试 */
+
 #include<stdio.h>
 
 int max(int a, int b) {

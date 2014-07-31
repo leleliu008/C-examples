@@ -5,9 +5,9 @@ int main() {
 	char b = 'A';
 	int c = 6;
 
-	int* pa = &a;
-	char* pb = &b;
-	int* pc = &c;
+	int *pa = &a;
+	char *pb = &b;
+	int *pc = &c;
 
 	int delta = pc - pa;
 	return 0;
