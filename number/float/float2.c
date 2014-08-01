@@ -1,3 +1,5 @@
+/* 测试浮点数的精度 */
+
 #include<stdio.h>
 
 int main() {

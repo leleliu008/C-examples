@@ -1,3 +1,5 @@
+/* 浮点数不能比较相等 */
+
 #include<stdio.h>
 #include<float.h>
 #include<math.h>

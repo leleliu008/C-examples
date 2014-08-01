@@ -1,3 +1,5 @@
+/* 测试float.h头文件中定义的宏 */
+
 #include<stdio.h>
 #include<float.h>
 
