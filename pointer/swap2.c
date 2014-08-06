@@ -1,5 +1,5 @@
 /* 两个数交换 */
-void swap(int* a, int* b) {
+void swap(int *a, int *b) {
 	int tmp;
 	tmp = *a;
 	*a = *b;
