@@ -8,7 +8,7 @@ int main() {
 	printf("cosh(-10) = %.16f\n", cosh(-10));
 	printf("cosh(DBL_MIN) = %.16f\n", cosh(DBL_MIN));
 
-    double x = sinh(DBL_MAX);
+    double x = cosh(DBL_MAX);
 	extern errno;
 	if(EDOM == errno) {
 		printf("cosh(DBL_MAX)超过了定义域\n");
