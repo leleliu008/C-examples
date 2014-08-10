@@ -17,7 +17,7 @@ int main() {
 
 	int rc = pthread_create(&threadId, NULL, run, NULL);
 	if(0 != rc) {
-		printf("create thread fial!\n");
+		printf("create thread fail!\n");
 		return -1;
 	}
 	printf("create thread success\n");
