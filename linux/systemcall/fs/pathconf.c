@@ -14,13 +14,17 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	char *namestr[] = {"_PC_LINK_MAX", "_PC_MAX_CANON", "_PC_MAX_INPUT", "_PC_NAME_MAX", \
-	                   "_PC_PATH_MAX", "_PC_PIPE_BUF", "_PC_CHOWN_RESTRICTED", \
-	                   "_PC_NO_TRUNC", "_PC_VDISABLE"};
+	char *namestr[] = {"_PC_LINK_MAX", "_PC_MAX_CANON", \
+			           "_PC_MAX_INPUT", "_PC_NAME_MAX", \
+			           "_PC_PATH_MAX", "_PC_PIPE_BUF", \
+			           "_PC_CHOWN_RESTRICTED", \
+			           "_PC_NO_TRUNC", "_PC_VDISABLE"};
 
-	int name[] = {_PC_LINK_MAX, _PC_MAX_CANON, _PC_MAX_INPUT, _PC_NAME_MAX, \
-	               _PC_PATH_MAX, _PC_PIPE_BUF, _PC_CHOWN_RESTRICTED, \
-				   _PC_NO_TRUNC, _PC_VDISABLE};
+	int name[] = {_PC_LINK_MAX, _PC_MAX_CANON, \
+			      _PC_MAX_INPUT, _PC_NAME_MAX, \
+	              _PC_PATH_MAX, _PC_PIPE_BUF,  \
+	              _PC_CHOWN_RESTRICTED, \
+				  _PC_NO_TRUNC, _PC_VDISABLE};
 
 	long limit = pathconf(argv[1], name[index]);
 
@@ -42,7 +46,8 @@ int main(int argc, char *argv[]) {
 			perror("不是一个目录");
 		}
 	} else {
-		printf("pathconf(\"%s\", %s) = %ld\n", argv[1], namestr[index], limit);
+		printf("pathconf(\"%s\", %s) = %ld\n", \
+				argv[1], namestr[index], limit);
 	}
 	return 0;
 }
