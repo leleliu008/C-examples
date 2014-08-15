@@ -8,7 +8,7 @@ int main() {
 	pid_t pgid1 = getpgid(pid);
 	pid_t pgid2 = getpgid(0);
 
-	setpgid(pid, getppid());
+	setpgid(pid, ppid);
 	
 	pid_t pgid3 = getpgid(ppid);
 	pid_t pgid4 = getpgid(pid);
