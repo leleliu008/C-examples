@@ -1,12 +1,12 @@
 #include<stdio.h>
 
 int main() {
-	FILE *fp = freopen("fgets.c", "r", stdin);
+	FILE *fp = fopen("fgets.c", "r");
 	if(NULL != fp) {
 		char buff[10];
 		buff[9] = '\0';
 		
-		char *p = gets(buff);
+		char *p = fgets(buff, 9, fp);
 		if(NULL != p) {
 			printf("%s\n", p);
 		}

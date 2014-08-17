@@ -1,4 +1,4 @@
-/* puts函数的测试 */
+/* fputs函数的测试 */
 
 #include<stdio.h>
 
@@ -6,11 +6,11 @@ int main() {
 	char str1[] = "I Love you!";
 	char *p = "C Program";
 
-	if(EOF == puts(str1)) {
+	if(EOF == fputs(str1, stdout)) {
 		perror("puts发生了错误");
 	}
 	
-	if(puts(p)) {
+	if(fputs(p, stdout)) {
 		printf("success\n");
 	}
 
