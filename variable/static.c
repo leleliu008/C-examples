@@ -1,17 +1,9 @@
-/* 局部静态变量 */
+/* 变量作用域 - 本文件内的全局变量*/
 
-#include<stdio.h>
+static int a = 20;
 
-void func() {
-	static int count;
-	count++;
-	printf("%d\n", count);
-}
-
-int main() {
-	int i;
-	for(i = 0; i < 10; i++) {
-		func();
-	}
+int main(int argc, char *argv[]) {
+	int a = 10;
+	
 	return 0;
 }

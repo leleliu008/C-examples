@@ -5,7 +5,7 @@ int main() {
 	if(fp) {
 		if(0 == fseek(fp, 0L, SEEK_END)) {
 			long length = ftell(fp);
-			printf("ftell.c is %ld Byte", length);
+			printf("ftell.c is %ld Byte\n", length);
 		}
 
 		fclose(fp);

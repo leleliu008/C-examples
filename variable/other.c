@@ -1,6 +1,6 @@
 #include"other.h"
 
-void other() {
+void func() {
 	extern a;
-	a = 30;
+	a = 20;
 }
