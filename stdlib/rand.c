@@ -11,7 +11,10 @@ int main() {
 	int i, j;
 	for(i = 0; i < 10; i++) {
 		j = 10.0 * rand() / RAND_MAX;
-		printf("%d \n", j);
+		printf("%-4d", j);
 	}
+
+	printf("\n");
+
 	return 0;
 }
