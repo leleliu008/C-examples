@@ -1,8 +1,9 @@
+#include<stdlib.h>
 #include<stdio.h>
 
-int main() {
-	int i = 1;
-	if(i > 0) {
+int main(int argc, char *argv[]) {
+	if(atoi(argv[1]) > 0) {
+		printf("goto label\n");
 		goto label;
 	}
 
