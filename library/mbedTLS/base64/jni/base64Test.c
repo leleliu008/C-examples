@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
             if (NULL == output) {
                 perror("error");
             } else {
+                printf("writenBytes = %zu\n", writenBytes);
                 printf("base64(%s) = %s\n", argv[2], output);
             }
             
