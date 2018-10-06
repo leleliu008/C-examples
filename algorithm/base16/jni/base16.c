@@ -1,3 +1,5 @@
+//http://blog.fpliu.com/it/data/text/encoding/Base16
+
 #include<stdlib.h>
 #include<string.h>
 #include"base16.h"
