@@ -62,6 +62,8 @@ unsigned char* url_decode(char *input, unsigned short *outputLength) {
             //16进制转10进制
             int num = hex2dec(c1) * 16 + hex2dec(c0);
             output[outputLength_++] = num;
+        } else if (c == '+') {
+            output[outputLength_++] = ' ';
         } else {
             output[outputLength_++] = c;
         }
