@@ -5,7 +5,9 @@ extern "C" {
 //base16编码(大写)
 //input是要编码的字节数据
 //inputLength是要编码的字节数据的长度
-char* base16_encode(unsigned char *input, unsigned short inputLength);
+char* base16_encode      (unsigned char *input, unsigned short inputLength, unsigned short isUpper);
+char* base16_encode_upper(unsigned char *input, unsigned short inputLength);
+char* base16_encode_lower(unsigned char *input, unsigned short inputLength);
 
 //base16解码
 //input是Base16编码的字符串

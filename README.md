@@ -1,5 +1,5 @@
 # C
-工作中用到的一些有关[C](http://blog.fpliu.com/it/software/development/language/C)语言相关的东西。
+工作中用到的一些[C](http://blog.fpliu.com/it/software/development/language/C)语言相关的东西。
 
 
 |一级目录|二级目录|说明

@@ -4,12 +4,24 @@
 #include<string.h>
 #include"base16.h"
 
-static char base16EncodeTable[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+char* base16_encode_upper(unsigned char* input, unsigned short inputLength) {
+    return base16_encode(input, inputLength, 1);
+}
 
-char* base16_encode(unsigned char* input, unsigned short inputLength) {
+char* base16_encode_lower(unsigned char* input, unsigned short inputLength) {
+    return base16_encode(input, inputLength, 0);
+}
+
+char* base16_encode(unsigned char* input, unsigned short inputLength, unsigned short isUpper) {
+    char *table;
+    if (isUpper) {
+        table = "0123456789ABCDEF";
+    } else {
+        table = "0123456789abcdef";
+    }
     unsigned short i;
     unsigned char highByte, lowByte;
-    char *output = (char *)calloc(2 * inputLength, sizeof(char));
+    char *output = (char *)calloc(inputLength << 1, sizeof(char));
     for (i = 0; i < inputLength; i++) {
         //向右移动4bit，获得高4bit
         highByte = input[i] >> 4;
@@ -18,8 +30,9 @@ char* base16_encode(unsigned char* input, unsigned short inputLength) {
 
         //由于高4bit和低4bit都只有4个bit，他们转换成10进制的数字，范围都在0 ～ 15闭区间内
         //大端模式
-        output[i * 2] = base16EncodeTable[highByte];
-        output[i * 2 + 1] = base16EncodeTable[lowByte];
+        unsigned int j = i << 1;
+        output[j] = table[highByte];
+        output[j + 1] = table[lowByte];
     }
     return output;
 }
@@ -42,12 +55,13 @@ short hex2dec(char c) {
 //outputLength是解码后的字节数组长度
 unsigned char* base16_decode(char* input, unsigned short *outputLength) {
     unsigned int inputLength = strlen(input);
-    unsigned int halfInputLength = inputLength / 2;
+    unsigned int halfInputLength = inputLength >> 1;
     unsigned char *output = (unsigned char *)calloc(halfInputLength, sizeof(unsigned char));
-    int i;
+    unsigned int i;
     for(i = 0; i < halfInputLength; i++) {
         //16进制数字转换为10进制数字的过程
-        output[i] = hex2dec(input[2 * i]) * 16 + hex2dec(input[2 * i + 1]);
+        unsigned int j = i << 1;
+        output[i] = (hex2dec(input[j]) << 4) + hex2dec(input[j + 1]);
     }
     *outputLength = halfInputLength;
     return output;

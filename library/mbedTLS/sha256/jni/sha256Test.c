@@ -11,19 +11,17 @@ void showHelp() {
     exit(1);
 }
 
-void performSHA256(char *input, int flag) {
+void performSHA256(char *input, short isUpper) {
     unsigned char output[32] = {0};
     mbedtls_sha256((unsigned char *)input, strlen(input), output, 0);
     
-    char format[5] = {0};
-    format[0] = '%';
-    format[1] = '0';
-    format[2] = '2';
-    if(flag) {
-        format[3] = 'X';    
+    char *format;
+    if(isUpper) {
+        format = "%02X";
     } else {
-        format[3] = 'x';
+        format = "%02x";
     }
+
     //转换为十六进制字符串
     char hex[65] = {0};
     char tmp[3] = {0};

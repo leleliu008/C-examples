@@ -31,39 +31,45 @@ unsigned char* aes_cbc_pkcs5padding_encode(const char *input, const char *key, s
     printf("input = %s, inputLength = %zu\n", input, inputLength);
 
     //看看需要分成多少个块，即使输入的数据是16的整数倍，也要补充16个字节的整数16
-    size_t n = inputLength / 16 + 1;
+    size_t n = (inputLength >> 4) + 1;
+    printf("n = %zu\n", n);
 
     //https://tools.ietf.org/html/rfc8018#appendix-B.2.5
-    int padding = 16 - inputLength % 8;
+    //a % 2的n次幂 = a & (2的n次幂 - 1)
+    unsigned int padding = 16 - (inputLength & 7);
+    printf("padding = %d\n", padding);
 
     //用于加密的的数据长度：字节数，此字节数正好等于输出的字节数
-    int needInputLength = 16 * n;
+    size_t needInputLength = n << 4;
+    printf("needInputLength = %zu\n", needInputLength);
+
     *outputLength = needInputLength;
 
     //初始向量，一般是一个随机数组成的，长度必须是块大小，一个块是16字节，也就是16个ASCII字符
     unsigned char iv[16];
-    memcpy(iv, key, keyLength);
+    //memcpy(iv, key, keyLength);
+    memset(iv, 0, 16);
 
     unsigned char *toBeEncryptBytes = (unsigned char *)calloc(needInputLength + 1, sizeof(unsigned char));
     memcpy(toBeEncryptBytes, (unsigned char *)input, inputLength);
     
     //填充数据
-    for (int i = 0; i < padding; i++) {
+    for (unsigned int i = 0; i < padding; i++) {
         toBeEncryptBytes[inputLength + i] = padding;
     }
     toBeEncryptBytes[needInputLength] = '\0';
-
+    
     //加密后的数据长度
     unsigned char *output = (unsigned char *)calloc(needInputLength, sizeof(unsigned char));
-
     //设置加密的key，并初始化
-    mbedtls_aes_setkey_enc(&aes, (unsigned char*)key, keyLength * 8);
+    mbedtls_aes_setkey_enc(&aes, (unsigned char*)key, keyLength << 3);
 
     //加密数据
     mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_ENCRYPT, needInputLength, iv, toBeEncryptBytes, output);
     
-    char outputHex[ 2 * needInputLength + 1];
-    memset(outputHex, 0, 2 * needInputLength + 1);
+    size_t length = (needInputLength << 1) + 1;
+    char outputHex[length];
+    memset(outputHex, 0, length);
 
     bytes2HexStr(outputHex, output, needInputLength);
 
@@ -92,18 +98,19 @@ unsigned char* aes_cbc_pkcs5padding_decode(unsigned char *input, size_t inputLen
     
     //初始向量，一般是一个随机数组成的，长度必须是块大小，一个块是16字节，也就是16个ASCII字符
     unsigned char iv[16];
-    memcpy(iv, key, keyLength);
-    
-    //解密后的数据长度
+    //memcpy(iv, key, keyLength);
+    memset(iv, 0, 16);
+
+    //解密后的数据
     unsigned char *output = (unsigned char *)calloc(inputLength, sizeof(unsigned char));
     
     //设置加密的key，并初始化
-    mbedtls_aes_setkey_dec(&aes, (unsigned char*)key, keyLength * 8);
+    mbedtls_aes_setkey_dec(&aes, (unsigned char*)key, keyLength << 3);
     
     //加密数据
     mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, inputLength, iv, input, output);
     
-    int outputLastIndex = inputLength - 1;
+    unsigned int outputLastIndex = inputLength - 1;
 
     //取出output最后一个字节，转成数字
     unsigned int lastValue = output[outputLastIndex];
@@ -118,12 +125,12 @@ unsigned char* aes_cbc_pkcs5padding_decode(unsigned char *input, size_t inputLen
         outputLastIndex = j;
     }
 
-    size_t inputHexLength = 2 * inputLength + 1;
+    size_t inputHexLength = (inputLength << 1) + 1;
     char inputHex[inputHexLength];
     memset(inputHex, 0, inputHexLength);
     bytes2HexStr(inputHex, input, inputLength);
     
-    size_t outputHexLength = 2 * inputLength + 1;
+    size_t outputHexLength = (inputLength << 1) + 1;
     char outputHex[outputHexLength];
     memset(outputHex, 0, outputHexLength);
     bytes2HexStr(outputHex, output, inputLength);

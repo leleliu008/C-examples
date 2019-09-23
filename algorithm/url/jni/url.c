@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-short hex2dec(char c) {
+char hex2dec(char c) {
     if ('0' <= c && c <= '9') {
         return c - '0';
     } else if ('a' <= c && c <= 'f') {
@@ -16,13 +16,18 @@ short hex2dec(char c) {
     }
 }
 
-static char dic[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+char* url_encode(unsigned char *input, unsigned short inputLength, unsigned short isUpper) {
+    char *table;
+    if (isUpper) {
+        table = "0123456789ABCDEF";
+    } else {
+        table = "0123456789abcdef";
+    }
 
-char* url_encode(unsigned char *input, unsigned short inputLength) {
-    int outputLength = 0;
+    unsigned int outputLength = 0;
     //以最坏的情况分配内存
     char *output = (char *)calloc(3 * inputLength + 1, sizeof(char));
-    int i = 0;
+    unsigned int i = 0;
     for (i = 0; i < inputLength; i++) {
         unsigned char c = input[i];
         //这些字符保持原样
@@ -37,31 +42,38 @@ char* url_encode(unsigned char *input, unsigned short inputLength) {
             //向右移动4bit，获得高4bit
             unsigned char highByte = c >> 4;
             //与0x0f做位与运算，获得低4bit
-            unsigned char lowByte = c & 0x0f;
+            unsigned char lowByte = c & 0x0F;
             //由于高4bit和低4bit都只有4个bit，他们转换成10进制的数字，范围都在0 ～ 15闭区间内
             //大端模式
             output[outputLength++] = '%';
-            output[outputLength++] = dic[highByte];
-            output[outputLength++] = dic[lowByte];
+            output[outputLength++] = table[highByte];
+            output[outputLength++] = table[lowByte];
         }
     }
     return output;
 }
 
+char* url_encode_upper(unsigned char *input, unsigned short inputLength) {
+    return url_encode(input, inputLength, 1);
+}
+
+char* url_encode_lower(unsigned char *input, unsigned short inputLength) {
+    return url_encode(input, inputLength, 0);
+}
+
 unsigned char* url_decode(char *input, unsigned short *outputLength) {
-    int inputLength = strlen(input);
-    int outputLength_ = 0;
+    unsigned int inputLength = strlen(input);
+    unsigned int outputLength_ = 0;
     //以最坏的情况分配内存
     unsigned char *output = (unsigned char *)calloc(inputLength + 1, sizeof(unsigned char));
-    int i = 0;
+    unsigned int i = 0;
     for (i = 0; i < inputLength; i++) {
         char c = input[i];
         if (c == '%') {
             char c1 = input[++i];
             char c0 = input[++i];
             //16进制转10进制
-            int num = hex2dec(c1) * 16 + hex2dec(c0);
-            output[outputLength_++] = num;
+            output[outputLength_++] = (hex2dec(c1) << 4) + hex2dec(c0);
         } else if (c == '+') {
             output[outputLength_++] = ' ';
         } else {

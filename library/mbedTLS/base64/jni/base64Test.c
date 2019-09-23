@@ -12,7 +12,7 @@ void showHelp() {
 char* base64Encode(unsigned char *input, size_t inputLength, size_t *writenBytes, int *errorCode) {
     //看看需要分配多少个字节
     size_t n = inputLength / 3 + (inputLength % 3);
-    size_t outputLength = 4 * n + 1;
+    size_t outputLength = (n << 2) + 1;
 
     //加密后的数据，这里定义为char*更明确，因为编码后的内容就是ASCII字符集中的字符组成的字符串
     char *output = (char *)calloc(outputLength, sizeof(char));
@@ -31,7 +31,7 @@ unsigned char* base64Decode(char *input, size_t *writenBytes, int *errorCode) {
     size_t inputLength = strlen(input);
 
     //base64编码的字符串的长度必须是4的整数倍
-    if ( inputLength % 4 != 0) {
+    if ((inputLength & 3) != 0) {
         (*errorCode) = MBEDTLS_ERR_BASE64_INVALID_CHARACTER; 
         return NULL;
     }

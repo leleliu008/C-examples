@@ -12,7 +12,7 @@ void showHelp() {
 int main(int argc, char *argv[]) {
     if (argc == 3) {
         if (strcmp("encode", argv[1]) == 0) {
-            char *output = base16_encode((unsigned char *)argv[2], strlen(argv[2]));
+            char *output = base16_encode((unsigned char *)argv[2], strlen(argv[2]), 0);
             printf("base16(%s) = %s\n", argv[2], output);
             free(output);
         } else if (strcmp("decode", argv[1]) == 0) {
