@@ -1,4 +1,4 @@
-//参考：http://blog.fpliu.com/it/data/text/encoding/URL
+//参考：http://blog.fpliu.com/it/data/text/coding/URL
 
 #include<stdio.h>
 #include<stdlib.h>

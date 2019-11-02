@@ -1,4 +1,4 @@
-//参考：http://blog.fpliu.com/it/data/text/encoding/URL
+//参考：http://blog.fpliu.com/it/data/text/coding/URL
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -17,7 +17,7 @@ char hex2dec(char c) {
 }
 
 char* url_encode(unsigned char *input, unsigned short inputLength, unsigned short isUpper) {
-    char *table;
+    char const *table;
     if (isUpper) {
         table = "0123456789ABCDEF";
     } else {

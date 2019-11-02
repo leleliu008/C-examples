@@ -1,4 +1,4 @@
-//http://blog.fpliu.com/it/data/text/encoding/Base16
+//http://blog.fpliu.com/it/data/text/coding/Base16
 
 #include<stdlib.h>
 #include<string.h>
@@ -13,7 +13,7 @@ char* base16_encode_lower(unsigned char* input, unsigned short inputLength) {
 }
 
 char* base16_encode(unsigned char* input, unsigned short inputLength, unsigned short isUpper) {
-    char *table;
+    char const *table;
     if (isUpper) {
         table = "0123456789ABCDEF";
     } else {
