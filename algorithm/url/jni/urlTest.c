@@ -3,11 +3,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"url.h"
+#include"URL.h"
 
 void showHelp() {
-    printf("usage: url encode xxxx\n");
-    printf("       url decode yyyy\n");
+    printf("usage: URL encode xxxx\n");
+    printf("       URL decode yyyy\n");
     exit(1);
 }
 
@@ -18,13 +18,16 @@ int main(int argc, char *argv[]) {
             printf("url_encode(%s) = %s\n", argv[2], output);
             free(output);
         } else if (strcmp("decode", argv[1]) == 0) {
-            unsigned short writenBytes = 0;
-            unsigned char *output = url_decode(argv[2], &writenBytes);
-            char outputStr[writenBytes + 1];
-            memset(outputStr, 0, writenBytes + 1);
-            memcpy(outputStr, output, writenBytes);
-            printf("url_decode(%s) = %s\n", argv[2], output);
-            free(output);
+            size_t writenBytes = 0;
+            unsigned char *bytes = url_decode(argv[2], &writenBytes);
+            
+            char str[writenBytes + 1];
+            memset(str, 0, writenBytes + 1);
+            memcpy(str, bytes, writenBytes);
+            
+            printf("url_decode(%s) = %s\n", argv[2], str);
+            
+            free(bytes);
         } else {
             showHelp();
         }

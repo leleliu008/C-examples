@@ -1,13 +1,20 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef URL_H
+#define URL_H
+    
+    #include <stdlib.h>
+    #include <stdbool.h>
+     
+    #ifdef __cplusplus
+        extern "C" {
+    #endif
 
-char*          url_encode      (unsigned char *input, unsigned short inputLength, unsigned short isUpper);
-char*          url_encode_upper(unsigned char *input, unsigned short inputLength);
-char*          url_encode_lower(unsigned char *input, unsigned short inputLength);
+    char* url_encode         (unsigned char *bytes, size_t nBytes, bool isToUpper);
+    char* url_encode_to_upper(unsigned char *bytes, size_t nBytes);
+    char* url_encode_to_lower(unsigned char *bytes, size_t nBytes);
+    
+    unsigned char* url_decode(char *input, size_t *outputLength);
 
-unsigned char* url_decode(char *input, unsigned short *outputLength);
-
-#ifdef __cplusplus
-}
+    #ifdef __cplusplus
+        }
+    #endif
 #endif

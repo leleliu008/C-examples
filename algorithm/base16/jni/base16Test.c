@@ -12,17 +12,19 @@ void showHelp() {
 int main(int argc, char *argv[]) {
     if (argc == 3) {
         if (strcmp("encode", argv[1]) == 0) {
-            char *output = base16_encode((unsigned char *)argv[2], strlen(argv[2]), 0);
+            char *output = base16_encode((unsigned char *)argv[2], strlen(argv[2]), false);
             printf("base16(%s) = %s\n", argv[2], output);
             free(output);
         } else if (strcmp("decode", argv[1]) == 0) {
-            unsigned short writenBytes = 0;
-            unsigned char *output = base16_decode(argv[2], &writenBytes);
-            char outputStr[writenBytes + 1];
-            memset(outputStr, 0, writenBytes + 1);
-            memcpy(outputStr, output, writenBytes);
-            printf("base16(%s) = %s\n", argv[2], output);
-            free(output);
+            unsigned char *bytes = base16_decode(argv[2]);
+            unsigned short nBytes = strlen(argv[2]) >> 1;
+
+            char str[nBytes + 1];
+            memset(str, 0, nBytes + 1);
+            memcpy(str, bytes, nBytes);
+
+            printf("base16(%s) = %s\n", argv[2], str);
+            free(bytes);
         } else {
             showHelp();
         }

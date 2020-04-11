@@ -2,7 +2,7 @@ LOCAL_PATH      := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := URL
-LOCAL_SRC_FILES := URL.c
+LOCAL_MODULE    := CRC
+LOCAL_SRC_FILES := CRC.c
 
 include $(BUILD_SHARED_LIBRARY)
