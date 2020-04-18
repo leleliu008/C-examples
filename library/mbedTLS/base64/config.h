@@ -1,0 +1,1 @@
+#define MBEDTLS_BASE64_C
