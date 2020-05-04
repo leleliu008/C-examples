@@ -1,3 +1,5 @@
+//http://blog.fpliu.com/it/software/development/language/C/library/mbedTLS/include/base64.h
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -63,26 +65,22 @@ int main(int argc, char *argv[]) {
             char *output = base64Encode((unsigned char*)argv[2], strlen(argv[2]), &writenBytes, &errorCode);
             if (NULL == output) {
                 printf("error occurred. code is %d\n", errorCode);
-                return errorCode;
             } else {
                 printf("base64(%s) = %s\n", argv[2], output);
             }
+            return errorCode;
         } else if (strcmp("decode", argv[1]) == 0) {
             size_t writenBytes = 0;
             int errorCode = -1;
-            unsigned char * output = base64Decode(argv[2], &writenBytes, &errorCode);
+            unsigned char* output = base64Decode(argv[2], &writenBytes, &errorCode);
             if (NULL == output) {
                 printf("error occurred. code is %d\n", errorCode);
-                return errorCode;
             } else {
                 printf("base64(%s) = %s\n", argv[2], output);
             }
-            
-        } else {
-            showHelp();
+            return errorCode;
         }
-    } else {
-        showHelp();
     }
+    showHelp();
     return 0;
 }

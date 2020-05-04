@@ -1,0 +1,9 @@
+<script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script>
+        var password = '123456';
+        var salt = 'abc';
+        var iterations = 1000;
+        var dklength = 256;
+        var key = CryptoJS.PBKDF2(password, salt, {hasher:CryptoJS.algo.SHA256, iterations: iterations, keySize: dklength/32}).toString(CryptoJS.enc.Hex);
+        document.write("pbkdf2_hmac_sha256(password=123456,salt=abc)=" + key);
+</script>

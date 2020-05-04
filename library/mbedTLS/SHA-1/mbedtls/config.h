@@ -1,0 +1,1 @@
+#define MBEDTLS_SHA1_C

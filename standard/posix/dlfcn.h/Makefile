@@ -8,17 +8,24 @@ LD_FILE_NAME = libadd$(LD_SUFFIX)
 
 override CFLAGS += -Os
 
-main: main.c
-	$(CC) $(CFLAGS) -DLD_FILE_NAME=\"$(LD_FILE_NAME)\" -o $@ $^
-
-test: main
-	./$<
-
 libadd: add.c
 	$(CC) $(CFLAGS) -shared -fPIC -o $(LD_FILE_NAME) $^
 
+compile_time_do_not_link: compile_time_do_not_link.c
+	$(CC) $(CFLAGS)  -o $@ $^
+
+compile_time_do_not_link_test: compile_time_do_not_link
+	./$< $(LD_FILE_NAME)
+
+compile_time_link: compile_time_link.c
+	$(CC) $(CFLAGS) -L. -ladd -o $@ $^
+
+compile_time_link_test: compile_time_link
+	./$<
+
 clean:
-	rm -rf $(LD_FILE_NAME)
-	rm -rf main
+	rm -f $(LD_FILE_NAME)
+	rm -f compile_time_do_not_link
+	rm -f compile_time_link
 
 .PHONY: clean

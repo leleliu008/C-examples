@@ -5,6 +5,8 @@ APP_PLATFORM = android-21
 NDK_BUILD_FLAGS = V=1
 
 BRANCH=mbedtls-2.14
+BASE_URL_H=https://raw.githubusercontent.com/ARMmbed/mbedtls/$(BRANCH)/include/mbedtls
+BASE_URL_C=https://raw.githubusercontent.com/ARMmbed/mbedtls/$(BRANCH)/library
 
 base64Test: *.c
 	$(CC) $(CFLAGS) -o $@ $^
@@ -24,8 +26,8 @@ clean:
 
 download-src:
 	printf "%s" "#define MBEDTLS_BASE64_C" > config.h && \
-	curl -LO https://raw.githubusercontent.com/ARMmbed/mbedtls/$(BRANCH)/include/mbedtls/base64.h && \
-	curl -LO https://raw.githubusercontent.com/ARMmbed/mbedtls/$(BRANCH)/library/base64.c && \
+	curl -LO $(BASE_URL_H)/base64.h && \
+	curl -LO $(BASE_URL_C)/base64.c && \
 	sed -i    's@mbedtls/@@g' base64.c 2> /dev/null && \
 	sed -i "" 's@mbedtls/@@g' base64.c
 
