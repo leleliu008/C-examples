@@ -1,7 +1,7 @@
 // http://blog.fpliu.com/it/data/text/coding/URL
 
 #include <string.h>
-#include <URL.h>
+#include <url.h>
 
 int url_encode(char* output, unsigned char* input, size_t inputLengthInBytes, bool isToUpper) {
     const char *table = isToUpper ? "0123456789ABCDEF" : "0123456789abcdef";
