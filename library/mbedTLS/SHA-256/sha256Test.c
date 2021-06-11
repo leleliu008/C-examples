@@ -1,4 +1,4 @@
-//http://blog.fpliu.com/it/software/development/language/C/library/mbedTLS/include/sha256.h
+//http://blog.fpliu.com/it/software/mbedTLS/include/sha256.h
 
 #include<stdio.h>
 #include<stdlib.h>

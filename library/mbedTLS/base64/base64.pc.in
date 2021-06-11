@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: base16
+URL: https://github.com/leleliu008/C
+Description: base64 algorthm
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lbase64
+Cflags: -I${includedir}

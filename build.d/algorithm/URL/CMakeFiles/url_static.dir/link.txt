@@ -1,0 +1,2 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc liburl.a CMakeFiles/url_static.dir/src/lib/url.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib liburl.a

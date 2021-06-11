@@ -1,3 +1,2 @@
-bin_PROGRAMS=test
-test_SOURCES=test.c
-
+ACLOCAL_AMFLAGS = -I m4
+SUBDIRS = src

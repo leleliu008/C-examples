@@ -1,0 +1,11 @@
+prefix=/Users/leleliu008/git/C/output
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: base16
+URL: https://github.com/leleliu008/C
+Description: base16 algorthm
+Version: 1.0.0
+Libs: -L${libdir} -lbase16
+Cflags: -I${includedir}

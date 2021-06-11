@@ -1,4 +1,4 @@
-//http://blog.fpliu.com/it/software/development/language/C/library/mbedTLS/include/ripemd160.h
+//http://blog.fpliu.com/it/software/mbedTLS/include/ripemd160.h
 
 #include<stdio.h>
 #include<stdlib.h>

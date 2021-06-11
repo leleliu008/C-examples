@@ -1,0 +1,19 @@
+Start testing: Jun 10 17:05 CST
+----------------------------------------------------------
+Unable to find executable: /Users/leleliu008/git/C/build.d/algorithm/chinese-calendar/chinese-calendar-test
+1/1 Testing: chinese-calendar-test
+1/1 Test: chinese-calendar-test
+Command: ""
+Directory: /Users/leleliu008/git/C/build.d/algorithm/chinese-calendar
+"chinese-calendar-test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"chinese-calendar-test" end time: Jun 10 17:05 CST
+"chinese-calendar-test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Jun 10 17:05 CST

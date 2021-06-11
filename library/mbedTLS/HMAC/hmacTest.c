@@ -1,4 +1,4 @@
-//http://blog.fpliu.com/it/software/development/language/C/library/mbedTLS/include/md.h
+//http://blog.fpliu.com/it/software/mbedTLS/include/md.h
 
 #include<stdio.h>
 #include<stdlib.h>

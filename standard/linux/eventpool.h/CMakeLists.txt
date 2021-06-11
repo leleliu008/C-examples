@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.8)
+
+project(CmakeTest)
+
+include(FindPkgConfig)
+
+pkg_check_modules(LIBSSH2 libssh2)
+
+message(${LIBSSH2_FOUND})
+
+message(${LIBSSH2_LIBRARIES})
+
+message(${LIBSSH2_INCLUDE_DIRS})
+message(${LIBSSH2_LIBRARY_DIRS})
+
+message(${LIBSSH2_CFLAGS})
+message(${LIBSSH2_LDFLAGS})
+
+message(${LIBSSH2_VERSION})
+message(${LIBSSH2_PREFIX})
+
+message(${CMAKE_PREFIX_PATH})
+message("$ENV{PKG_CONFIG_PATH}")
+
+FOREACH(LIBRARY ${LIBSSH2_LIBRARIES})
+    FIND_LIBRARY(${LIBRARY}_RESOLVED ${LIBRARY} PATHS ${LIBSSH2_LIBRARY_DIRS})
+    message(${${LIBRARY}_RESOLVED})
+    IF(${${LIBRARY}_RESOLVED} STREQUAL "${LIBRARY}_RESOLVED-NOTFOUND")
+        MESSAGE(FATAL_ERROR "could not resolve ${LIBRARY}")
+    ENDIF()
+    LIST(APPEND RESOLVED_LIBRARIES ${${LIBRARY}_RESOLVED})
+ENDFOREACH(LIBRARY)
