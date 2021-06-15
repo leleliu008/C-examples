@@ -1,0 +1,5 @@
+/Users/leleliu008/git/C/algorithm/chinese-calendar/output/bin/chinese-calendar
+/Users/leleliu008/git/C/algorithm/chinese-calendar/output/lib/libchinese-calendar.a
+/Users/leleliu008/git/C/algorithm/chinese-calendar/output/lib/libchinese-calendar.dylib
+/Users/leleliu008/git/C/algorithm/chinese-calendar/output/lib/cmake/FindChineseCalendar.cmake
+/Users/leleliu008/git/C/algorithm/chinese-calendar/output/lib/pkgconfig/chinese-calendar.pc

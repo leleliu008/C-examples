@@ -25,12 +25,12 @@
 
 ## 编译
 每个模块都可以独立编译。也可以整体编译。
-```
+```bash
 cmake -S . -B build.d -DCMAKE_INSTALL_PREFIX=./output -DENABLE_TESTING=ON
 cmake --build build.d --target install
 ```
 
 ## 运行单元测试程序
-```
+```bash
 cmake --test-dir build.d/algorithm/base16
 ```
