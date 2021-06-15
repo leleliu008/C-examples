@@ -19,8 +19,8 @@
 |||||
 |algorithm|base16||[Base16](http://blog.fpliu.com/it/data/text/coding/Base16)算法的实现|
 |algorithm|url||[URL](http://blog.fpliu.com/it/data/text/coding/URL)编解码算法的实现|
-|algorithm|BCC||[BCC](http://blog.fpliu.com/it/algorithm/check/BCC)校验算法的实现|
-|algorithm|LRC||[LRC](http://blog.fpliu.com/it/algorithm/check/LRC)校验算法的实现|
+|algorithm|bcc||[BCC](http://blog.fpliu.com/it/algorithm/check/BCC)校验算法的实现|
+|algorithm|lrc||[LRC](http://blog.fpliu.com/it/algorithm/check/LRC)校验算法的实现|
 |algorithm|chinese-calendar||中国阳历日期转换为阴历日期、节气、节日算法的实现|
 
 ## 编译
