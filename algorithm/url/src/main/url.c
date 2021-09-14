@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <URL.h>
+#include <url.h>
 
 static void help(int exitCode) {
     printf("usage:\n");

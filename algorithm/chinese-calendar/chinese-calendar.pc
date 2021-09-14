@@ -1,4 +1,4 @@
-prefix=/Users/leleliu008/git/C/algorithm/chinese-calendar/output
+prefix=/usr/local
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
