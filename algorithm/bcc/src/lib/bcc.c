@@ -1,6 +1,6 @@
 //http://blog.fpliu.com/it/algorithm/check/BCC
 
-#include <bcc.h>
+#include "bcc.h"
 
 unsigned char bcc(unsigned char *bytes, size_t nBytes) {
     unsigned char byte = 0;

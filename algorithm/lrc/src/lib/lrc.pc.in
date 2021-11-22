@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: liblrc
+URL: https://github.com/leleliu008/C/algorithm/lrc
+Description: lrc check algorthm
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -llrc
+Cflags: -I${includedir}
