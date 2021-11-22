@@ -20,7 +20,7 @@ jobs:
 
       - run:  brew update
       - run:  brew install cmake tree
-
+      - run:  cmake --version
       - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON
       - run:  cmake --build   build.d
       - run:  cmake --install build.d
@@ -38,8 +38,8 @@ jobs:
       - uses: actions/checkout@main
 
       - run:  choco install -y cmake tree
-
-      - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output
+      - run:  cmake --version
+      - run:  cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON -S . -B build.d
       - run:  cmake --build   build.d
       - run:  cmake --install build.d
       - run:  tree output
