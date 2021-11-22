@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-on-unix:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04, macos-10.15, macos-11]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@main
+
+      - run:  brew update
+      - run:  brew install cmake tree
+
+      - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output
+      - run:  cmake --build   build.d
+      - run:  cmake --install build.d
+      - run:  tree output
+
+  build-on-windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@main
+
+      - run:  choco update
+      - run:  choco install -y cmake tree
+
+      - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output
+      - run:  cmake --build   build.d
+      - run:  cmake --install build.d
+      - run:  tree output
+
+  codacy-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: codacy/codacy-analysis-cli-action@master
+        with:
+          output: results.sarif
+          format: sarif
+          # Adjust severity of non-security issues
+          gh-code-scanning-compat: true
+          # Force 0 exit code to allow SARIF file generation
+          # This will handover control about PR rejection to the GitHub side
+          max-allowed-issues: 2147483647
+
+      # Upload the SARIF file generated in the previous step
+      - name: Upload SARIF results file
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: results.sarif
