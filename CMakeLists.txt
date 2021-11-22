@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.1)
 
 project(C C)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
