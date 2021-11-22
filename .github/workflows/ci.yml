@@ -37,7 +37,6 @@ jobs:
     steps:
       - uses: actions/checkout@main
 
-      - run:  choco upgrade
       - run:  choco install -y cmake tree
 
       - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output
