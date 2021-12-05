@@ -79,6 +79,7 @@ flags = [
 './algorithm/chinese-calendar/src/lib',
 '-I',
 './library/mbedTLS/base64/src/include',
+'./library/cJSON/src/lib',
 '-isystem',
 '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include',
 '-isystem',

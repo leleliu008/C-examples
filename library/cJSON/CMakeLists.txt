@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.0.0)
+
+project(cJSONTest C)
+
+include(CTest)
+if (ENABLE_TESTING)
+    add_executable(cJSONTest src/test/cJSON.c src/lib/cJSON.c)
+    target_include_directories(cJSONTest PRIVATE src/lib)
+    include(src/test/FindCUnit.cmake)
+    if (CUNIT_FOUND)
+        target_include_directories(cJSONTest PRIVATE ${CUNIT_INCLUDE_DIR})
+        target_link_libraries(cJSONTest ${CUNIT_LIBRARY})
+    else()
+        message(FATAL_ERROR "Couldn't find CUnit library.")
+    endif()
+    add_test(NAME cJSONTest COMMAND ${CMAKE_CURRENT_BINARY_DIR}/cJSONTest)
+endif()
