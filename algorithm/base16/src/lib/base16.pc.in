@@ -3,9 +3,9 @@ exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
 
-Name: libbase16
+Name: base16
 URL: https://github.com/leleliu008/C/algorithm/base16
-Description: base16 algorthm
+Description: base16 algorthm library
 Version: @PROJECT_VERSION@
 Libs: -L${libdir} -lbase16
 Cflags: -I${includedir}

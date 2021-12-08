@@ -15,8 +15,8 @@ endif()
 add_library(base16-static STATIC src/lib/base16.c)
 add_library(base16-shared SHARED src/lib/base16.c)
 
-set_target_properties(base16-static PROPERTIES OUTPUT_NAME base16 CLEAN_DIRECT_OUTPUT 1)
-set_target_properties(base16-shared PROPERTIES OUTPUT_NAME base16 CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(base16-static PROPERTIES OUTPUT_NAME base16 CLEAN_DIRECT_OUTPUT 1 EXPORT_NAME static)
+set_target_properties(base16-shared PROPERTIES OUTPUT_NAME base16 CLEAN_DIRECT_OUTPUT 1 EXPORT_NAME shared)
 
 ########################################################################################
 
@@ -29,14 +29,13 @@ target_include_directories(base16 PRIVATE src/lib)
 include(GNUInstallDirs)
 
 install(TARGETS base16        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS base16-static ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES   src/lib/base16.h       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 ########################################################################################
 
-configure_file(src/lib/base16.pc.in libbase16.pc @ONLY)
+configure_file(src/lib/base16.pc.in base16.pc @ONLY)
 install(
-    FILES       "${CMAKE_CURRENT_BINARY_DIR}/libbase16.pc"
+    FILES       "${CMAKE_CURRENT_BINARY_DIR}/base16.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )
 
@@ -45,14 +44,27 @@ install(
 set(CMAKE_INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/base16")
 
 install(
+    TARGETS     base16-static
+    EXPORT      base16-staticTargets
+    ARCHIVE
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+)
+install(
+    EXPORT      base16-staticTargets
+    FILE        base16-staticTargets.cmake
+    NAMESPACE   base16::
+    DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
+)
+
+install(
     TARGETS     base16-shared
-    EXPORT      base16Targets 
+    EXPORT      base16-sharedTargets
     LIBRARY
     DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 install(
-    EXPORT      base16Targets
-    FILE        base16Targets.cmake
+    EXPORT      base16-sharedTargets
+    FILE        base16-sharedTargets.cmake
     NAMESPACE   base16::
     DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
 )
