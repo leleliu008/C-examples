@@ -31,27 +31,33 @@ int main(int argc, char *argv[]) {
 
             time_t now = time(NULL);
             struct tm *tms = localtime(&now);
-            int year  = 1900 + tms->tm_year;
-            int month = 1 + tms->tm_mon;
-            int day   = tms->tm_mday;
+            int solarYear  = 1900 + tms->tm_year;
+            int solarMonth = 1 + tms->tm_mon;
+            int solarDay   = tms->tm_mday;
 
-            char *lunar = solar2lunar(year, month, day);
-            char *jieRi = jieri(year, month, day, lunar);
-            char *jieQi = jieqi(year, month, day);
+            char *chineseLunarDate = get_chinese_lunar_date(solarYear, solarMonth, solarDay);
+            char *chineseFestival  = get_chinese_festival3(solarYear, solarMonth, solarDay, chineseLunarDate);
+            char *chineseJieQi     = get_chinese_jieqi(solarYear, solarMonth, solarDay);
 
             char result[50] = {0};
-            sprintf(result, "%02d:%02d:%02d %4d-%02d-%02d %s 周%s", tms->tm_hour, tms->tm_min, tms->tm_sec, year, month, day, lunar, week[tms->tm_wday]);
-            free(lunar);
-            if (NULL != jieRi) {
-                strcat(result, " ");
-                strcat(result, jieRi);
-                free(jieRi);
+            sprintf(result, "%02d:%02d:%02d %4d-%02d-%02d %s 周%s", tms->tm_hour, tms->tm_min, tms->tm_sec, solarYear, solarMonth, solarDay, chineseLunarDate, week[tms->tm_wday]);
+
+            if (NULL != chineseLunarDate) {
+                free(chineseLunarDate);
             }
-            if (NULL != jieQi) {
+
+            if (NULL != chineseFestival) {
                 strcat(result, " ");
-                strcat(result, jieQi);
-                free(jieQi);
+                strcat(result, chineseFestival);
+                free(chineseFestival);
             }
+
+            if (NULL != chineseJieQi) {
+                strcat(result, " ");
+                strcat(result, chineseJieQi);
+                free(chineseJieQi);
+            }
+
             printf("%s\n", result);
         } else {
             help(1);

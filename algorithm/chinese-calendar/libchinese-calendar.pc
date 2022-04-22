@@ -1,0 +1,11 @@
+prefix=/home/leleliu008/C/output
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libchinese-calendar
+URL: https://github.com/leleliu008/C/algorithm/chinese-calendar
+Description: chinese festival/jieqi algorthm
+Version: 1.0.0
+Libs: -L${libdir} -lchinese-calendar
+Cflags: -I${includedir}

@@ -1,0 +1,1 @@
+/usr/bin/cc -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -rdynamic "CMakeFiles/bcc-test.dir/src/test/bcc.c.o" -o bcc-test  -Wl,-rpath,/home/linuxbrew/.linuxbrew/Cellar/cunit/2.1-3/lib libbcc.a /home/linuxbrew/.linuxbrew/Cellar/cunit/2.1-3/lib/libcunit.so 

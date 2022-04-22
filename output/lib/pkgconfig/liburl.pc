@@ -1,0 +1,11 @@
+prefix=/home/leleliu008/C/output
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: liburl
+URL: https://github.com/leleliu008/C/algorithm/url
+Description: url encode/decode algorthm
+Version: 1.0.0
+Libs: -L${libdir} -lurl
+Cflags: -I${includedir}

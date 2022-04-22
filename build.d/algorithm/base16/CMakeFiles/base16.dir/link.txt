@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -rdynamic CMakeFiles/base16.dir/src/main/base16.c.o -o base16  libbase16.a 

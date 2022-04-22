@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -shared -Wl,-soname,libchinese-calendar.so -o libchinese-calendar.so "CMakeFiles/chinese-calendar-shared.dir/src/lib/chinese-calendar.c.o" 

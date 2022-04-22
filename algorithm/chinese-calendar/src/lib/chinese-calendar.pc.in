@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: libchinese-calendar
 URL: https://github.com/leleliu008/C/algorithm/chinese-calendar
-Description: chinese jieri/jieqi algorthm
+Description: chinese festival/jieqi algorthm
 Version: @PROJECT_VERSION@
 Libs: -L${libdir} -lchinese-calendar
 Cflags: -I${includedir}

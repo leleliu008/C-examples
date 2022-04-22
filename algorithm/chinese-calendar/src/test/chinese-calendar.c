@@ -4,22 +4,22 @@
 #include <chinese-calendar.h>
 
 void test_solar2lunar() {
-    char* result = solar2lunar(2021, 6, 14);
+    char* result = get_chinese_lunar_date(2021, 6, 14);
     CU_ASSERT_PTR_NOT_NULL(result);
     CU_ASSERT_STRING_EQUAL(result, "五月初五");
 }
 
 void test_jieri() {
-    char* result = solar2lunar(2021, 6, 14);
+    char* result = get_chinese_lunar_date(2021, 6, 14);
     CU_ASSERT_PTR_NOT_NULL(result);
     CU_ASSERT_STRING_EQUAL(result, "五月初五");
-    char* jieRi = jieri(2021, 6, 14, result);
+    char* jieRi = get_chinese_festival3(2021, 6, 14, result);
     CU_ASSERT_PTR_NOT_NULL(jieRi);
     CU_ASSERT_STRING_EQUAL(jieRi, "端午节");
 }
 
 void test_jieqi() {
-    char* jieQi = jieqi(2021, 6, 5);
+    char* jieQi = get_chinese_jieqi(2021, 6, 5);
     CU_ASSERT_PTR_NOT_NULL(jieQi);
     CU_ASSERT_STRING_EQUAL(jieQi, "芒种");
 }

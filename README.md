@@ -29,8 +29,9 @@
 cmake -S . -B build.d -DCMAKE_INSTALL_PREFIX=./output -DENABLE_TESTING=ON
 cmake --build build.d --target install
 ```
+**Note:** if `-DENABLE_TESTING=ON` is given, [CUnit](http://cunit.sourceforge.net/) should be installed.
 
 ## 运行单元测试程序
 ```bash
-cmake --test-dir build.d/algorithm/base16
+ctest --test-dir build.d/algorithm/base16
 ```

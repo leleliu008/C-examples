@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -shared -Wl,-soname,libbcc.so -o libbcc.so "CMakeFiles/bcc-shared.dir/src/lib/bcc.c.o" 

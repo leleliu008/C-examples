@@ -1,0 +1,2 @@
+/usr/bin/ar qc libbase16.a "CMakeFiles/base16-static.dir/src/lib/base16.c.o"
+/usr/bin/ranlib libbase16.a

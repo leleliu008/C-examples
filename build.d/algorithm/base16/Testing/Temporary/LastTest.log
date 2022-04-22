@@ -1,0 +1,18 @@
+Start testing: Apr 22 23:04 CST
+----------------------------------------------------------
+1/1 Testing: base16-test
+1/1 Test: base16-test
+Command: "/home/leleliu008/C/build.d/algorithm/base16/base16-test"
+Directory: /home/leleliu008/C/build.d/algorithm/base16
+"base16-test" start time: Apr 22 23:04 CST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"base16-test" end time: Apr 22 23:04 CST
+"base16-test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 22 23:04 CST

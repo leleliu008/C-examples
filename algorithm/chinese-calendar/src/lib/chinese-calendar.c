@@ -27,17 +27,17 @@ unsigned int LunarCalendarTable[199] = {
 };
 int MonthAdd[12] = {0,31,59,90,120,151,181,212,243,273,304,334};
 
-int LunarCalendar(int year, int month, int day, unsigned int* LunarCalendarDay) {
+int LunarCalendar(int solarYear, int solarMonth, int solarDay, unsigned int* LunarCalendarDay) {
     int Spring_NY,Sun_NY,StaticDayCount;
     int index,flag;
     //Spring_NY 记录春节离当年元旦的天数。
     //Sun_NY 记录阳历日离当年元旦的天数。
-    if ( ((LunarCalendarTable[year-1901] & 0x0060) >> 5) == 1)
-        Spring_NY = (LunarCalendarTable[year-1901] & 0x001F) - 1;
+    if ( ((LunarCalendarTable[solarYear-1901] & 0x0060) >> 5) == 1)
+        Spring_NY = (LunarCalendarTable[solarYear-1901] & 0x001F) - 1;
     else
-        Spring_NY = (LunarCalendarTable[year-1901] & 0x001F) - 1 + 31;
-    Sun_NY = MonthAdd[month-1] + day - 1;
-    if ( (!(year % 4)) && (month > 2))
+        Spring_NY = (LunarCalendarTable[solarYear-1901] & 0x001F) - 1 + 31;
+    Sun_NY = MonthAdd[solarMonth-1] + solarDay - 1;
+    if ( (!(solarYear % 4)) && (solarMonth > 2))
         Sun_NY++;
     //StaticDayCount记录大小月的天数 29 或30
     //index 记录从哪个月开始来计算。
@@ -46,10 +46,10 @@ int LunarCalendar(int year, int month, int day, unsigned int* LunarCalendarDay) 
     if (Sun_NY >= Spring_NY)//阳历日在春节后（含春节那天）
     {
         Sun_NY -= Spring_NY;
-        month = 1;
+        solarMonth = 1;
         index = 1;
         flag = 0;
-        if ( ( LunarCalendarTable[year - 1901] & (0x80000 >> (index-1)) ) ==0)
+        if ( ( LunarCalendarTable[solarYear - 1901] & (0x80000 >> (index-1)) ) ==0)
             StaticDayCount = 29;
         else
             StaticDayCount = 30;
@@ -57,32 +57,32 @@ int LunarCalendar(int year, int month, int day, unsigned int* LunarCalendarDay) 
         {
             Sun_NY -= StaticDayCount;
             index++;
-            if (month == ((LunarCalendarTable[year - 1901] & 0xF00000) >> 20) )
+            if (solarMonth == ((LunarCalendarTable[solarYear - 1901] & 0xF00000) >> 20) )
             {
                 flag = ~flag;
                 if (flag == 0)
-                    month++;
+                    solarMonth++;
             }
             else
-                month++;
-            if ( ( LunarCalendarTable[year - 1901] & (0x80000 >> (index-1)) ) ==0)
+                solarMonth++;
+            if ( ( LunarCalendarTable[solarYear - 1901] & (0x80000 >> (index-1)) ) ==0)
                 StaticDayCount=29;
             else
                 StaticDayCount=30;
         }
-        day = Sun_NY + 1;
+        solarDay = Sun_NY + 1;
     }
     else //阳历日在春节前
     {
         Spring_NY -= Sun_NY;
-        year--;
-        month = 12;
-        if ( ((LunarCalendarTable[year - 1901] & 0xF00000) >> 20) == 0)
+        solarYear--;
+        solarMonth = 12;
+        if ( ((LunarCalendarTable[solarYear - 1901] & 0xF00000) >> 20) == 0)
             index = 12;
         else
             index = 13;
         flag = 0;
-        if ( ( LunarCalendarTable[year - 1901] & (0x80000 >> (index-1)) ) ==0)
+        if ( ( LunarCalendarTable[solarYear - 1901] & (0x80000 >> (index-1)) ) ==0)
             StaticDayCount = 29;
         else
             StaticDayCount = 30;
@@ -91,19 +91,19 @@ int LunarCalendar(int year, int month, int day, unsigned int* LunarCalendarDay) 
             Spring_NY -= StaticDayCount;
             index--;
             if (flag == 0)
-                month--;
-            if (month == ((LunarCalendarTable[year - 1901] & 0xF00000) >> 20))
+                solarMonth--;
+            if (solarMonth == ((LunarCalendarTable[solarYear - 1901] & 0xF00000) >> 20))
                 flag = ~flag;
-            if ( ( LunarCalendarTable[year - 1901] & (0x80000 >> (index-1)) ) ==0)
+            if ( ( LunarCalendarTable[solarYear - 1901] & (0x80000 >> (index-1)) ) ==0)
                 StaticDayCount = 29;
             else
                 StaticDayCount = 30;
         }
-        day = StaticDayCount - Spring_NY + 1;
+        solarDay = StaticDayCount - Spring_NY + 1;
     }
-    *LunarCalendarDay |= day;
-    *LunarCalendarDay |= (month << 6);
-    return (month == ((LunarCalendarTable[year - 1901] & 0xF00000) >> 20)) ? 1 : 0;
+    *LunarCalendarDay |= solarDay;
+    *LunarCalendarDay |= (solarMonth << 6);
+    return (solarMonth == ((LunarCalendarTable[solarYear - 1901] & 0xF00000) >> 20)) ? 1 : 0;
 }
 
 const char* CHINESE_DAY[] = {"*","初一","初二","初三","初四","初五",
@@ -115,18 +115,18 @@ const char* CHINESE_DAY[] = {"*","初一","初二","初三","初四","初五",
                             };
 const char* CHINESE_MONTH[] = {"*","正","二","三","四","五","六","七","八","九","十","十一","腊"};
 
-
 /* 将阳历转换为阴历
- * year  阳历的年
- * month 阳历的月
- * day   阳历的日
+ * solarYear  阳历的年
+ * solarMonth 阳历的月
+ * solarDay   阳历的日
+ * return 示例: 正月初一, 二月初二, 腊月初八
  */
-char* solar2lunar(int year, int month, int day) {
+char* get_chinese_lunar_date(int solarYear, int solarMonth, int solarDay) {
     char *str = (char*)calloc(13, sizeof(char));
 
     unsigned int LunarCalendarDay = 0;
 
-    if (LunarCalendar(year, month, day, &LunarCalendarDay)) {
+    if (LunarCalendar(solarYear, solarMonth, solarDay, &LunarCalendarDay)) {
         strcat(str, "闰");
     }
     strcat(str, CHINESE_MONTH[(LunarCalendarDay & 0x3C0) >> 6]);
@@ -136,76 +136,97 @@ char* solar2lunar(int year, int month, int day) {
     return str;
 }
 
-static char* jieRi(const char *str) {
+static char* chinese_festival(const char *str) {
     char *p = (char*)calloc(strlen(str) + 1, sizeof(char));
     strcpy(p, str);
     return p;
 }
 
-/* 如果指定的阳历日期是某个节日，返回该节日，否则返回NULL
- * year  阳历的年
- * month 阳历的月
- * day   阳历的日
+/* 获得中国节日，以中国汉字输出
+ * solarYear  阳历的年
+ * solarMonth 阳历的月
+ * solarDay   阳历的日
  */
-char* jieri(int year, int month, int day, const char *lunarMonthAndDay) {
-    if (month == 1 && day == 1) {
-        return jieRi("元旦");
-    } else if (month == 2 && day == 14) {
-        return jieRi("情人节");
-    } else if (month == 3 && day == 8) {
-        return jieRi("妇女节");
-    } else if (month == 3 && day == 12) {
-        return jieRi("植树节");
-    } else if (month == 3 && day == 15) {
-        return jieRi("消费者权益日");
-    } else if (month == 4 && day == 1) {
-        return jieRi("愚人节");
-    } else if (month == 5 && day == 1) {
-        return jieRi("劳动节");
-    } else if (month == 5 && day == 4) {
-        return jieRi("青年节");
-    } else if (month == 5 && day == 12) {
-        return jieRi("护士节");
-    } else if (month == 5 && day == 18) {
-        return jieRi("博物馆日");
-    } else if (month == 6 && day == 1) {
-        return jieRi("儿童节");
-    } else if (month == 7 && day == 1) {
-        return jieRi("建党节");
-    } else if (month == 8 && day == 1) {
-        return jieRi("建军节");
-    } else if (month == 9 && day == 10) {
-        return jieRi("教师节");
-    } else if (month == 10 && day == 1) {
-        return jieRi("国庆节");
-    } else if (month == 12 && day == 25) {
-        return jieRi("圣诞节");
-    } else if (NULL == lunarMonthAndDay) {
-        return NULL;
+char* get_chinese_festival1(int solarYear, int solarMonth, int solarDay) {
+    if (solarMonth == 1 && solarDay == 1) {
+        return chinese_festival("元旦");
+    } else if (solarMonth == 2 && solarDay == 14) {
+        return chinese_festival("情人节");
+    } else if (solarMonth == 3 && solarDay == 8) {
+        return chinese_festival("妇女节");
+    } else if (solarMonth == 3 && solarDay == 12) {
+        return chinese_festival("植树节");
+    } else if (solarMonth == 3 && solarDay == 15) {
+        return chinese_festival("消费者权益日");
+    } else if (solarMonth == 4 && solarDay == 1) {
+        return chinese_festival("愚人节");
+    } else if (solarMonth == 5 && solarDay == 1) {
+        return chinese_festival("劳动节");
+    } else if (solarMonth == 5 && solarDay == 4) {
+        return chinese_festival("青年节");
+    } else if (solarMonth == 5 && solarDay == 12) {
+        return chinese_festival("护士节");
+    } else if (solarMonth == 5 && solarDay == 18) {
+        return chinese_festival("博物馆日");
+    } else if (solarMonth == 6 && solarDay == 1) {
+        return chinese_festival("儿童节");
+    } else if (solarMonth == 7 && solarDay == 1) {
+        return chinese_festival("建党节");
+    } else if (solarMonth == 8 && solarDay == 1) {
+        return chinese_festival("建军节");
+    } else if (solarMonth == 9 && solarDay == 10) {
+        return chinese_festival("教师节");
+    } else if (solarMonth == 10 && solarDay == 1) {
+        return chinese_festival("国庆节");
+    } else if (solarMonth == 12 && solarDay == 25) {
+        return chinese_festival("圣诞节");
     } else {
-        if (strcmp(lunarMonthAndDay, "正月初一") == 0) {
-            return jieRi("春节");
-        } else if (strcmp(lunarMonthAndDay, "正月初七") == 0) {
-            return jieRi("小年");
-        } else if (strcmp(lunarMonthAndDay, "正月十五") == 0) {
-            return jieRi("元宵节");
-        } else if (strcmp(lunarMonthAndDay, "二月初二") == 0) {
-            return jieRi("龙抬头");
-        } else if (strcmp(lunarMonthAndDay, "五月初五") == 0) {
-            return jieRi("端午节");
-        } else if (strcmp(lunarMonthAndDay, "七月初七") == 0) {
-            return jieRi("七夕情人节");
-        } else if (strcmp(lunarMonthAndDay, "七月十五") == 0) {
-            return jieRi("中元节");
-        } else if (strcmp(lunarMonthAndDay, "八月十五") == 0) {
-            return jieRi("中秋节");
-        } else if (strcmp(lunarMonthAndDay, "九月初九") == 0) {
-            return jieRi("重阳节");
-        } else if (strcmp(lunarMonthAndDay, "腊月初八") == 0) {
-            return jieRi("腊八节");
-        }
         return NULL;
     }
+}
+
+/* 获得中国节日，以中国汉字输出
+ * chineseLunarDate 阴历的月日: 示例: 正月初一, 二月初二, 腊月初八
+ */
+char* get_chinese_festival2(const char *chineseLunarDate) {
+    if (NULL == chineseLunarDate) {
+        return NULL;
+    } else if (strcmp(chineseLunarDate, "正月初一") == 0) {
+        return chinese_festival("春节");
+    } else if (strcmp(chineseLunarDate, "正月初七") == 0) {
+        return chinese_festival("小年");
+    } else if (strcmp(chineseLunarDate, "正月十五") == 0) {
+        return chinese_festival("元宵节");
+    } else if (strcmp(chineseLunarDate, "二月初二") == 0) {
+        return chinese_festival("龙抬头");
+    } else if (strcmp(chineseLunarDate, "五月初五") == 0) {
+        return chinese_festival("端午节");
+    } else if (strcmp(chineseLunarDate, "七月初七") == 0) {
+        return chinese_festival("七夕情人节");
+    } else if (strcmp(chineseLunarDate, "七月十五") == 0) {
+        return chinese_festival("中元节");
+    } else if (strcmp(chineseLunarDate, "八月十五") == 0) {
+        return chinese_festival("中秋节");
+    } else if (strcmp(chineseLunarDate, "九月初九") == 0) {
+        return chinese_festival("重阳节");
+    } else if (strcmp(chineseLunarDate, "腊月初八") == 0) {
+        return chinese_festival("腊八节");
+    }
+    return NULL;
+}
+
+/* 获得中国节日，以中国汉字输出
+ * solarYear  阳历的年
+ * solarMonth 阳历的月
+ * solarDay   阳历的日
+ * chineseLunarDate 阴历的月日: 示例: 正月初一, 二月初二, 腊月初八
+ */
+char* get_chinese_festival3(int solarYear, int solarMonth, int solarDay, const char *chineseLunarDate) {
+    char* result = get_chinese_festival1(solarYear, solarMonth, solarDay);
+    if (NULL == result) {
+        return get_chinese_festival2(chineseLunarDate);
+    }
+    return result;
 }
 
 static const double x_1900_1_6_2_5 = 693966.08680556;
@@ -226,8 +247,8 @@ static const char* solar_term_name[] = {
     "立冬","小雪","大雪","冬至"
 };
 
-static double get_solar_term(int year, int n) {
-    return x_1900_1_6_2_5 + 365.2422 * (year - 1900) + termInfo[n] / (60. * 24);
+static double get_solar_term(int solarYear, int n) {
+    return x_1900_1_6_2_5 + 365.2422 * (solarYear - 1900) + termInfo[n] / (60. * 24);
 }
 
 static int format_date(unsigned _days, char* result) {
@@ -277,22 +298,22 @@ static int format_date(unsigned _days, char* result) {
     return sprintf(result, "%04d-%02d-%02d", y, m, d);
 }
 
-/* 如果指定的阳历日期是某个节气，返回该节气，否则返回NULL
- * year  阳历的年
- * month 阳历的月
- * day   阳历的日
+/* 如果给定的阳历日期是某个节气，返回该节气，否则返回NULL
+ * solarYear  阳历的年
+ * solarMonth 阳历的月
+ * solarDay   阳历的日
  */
-char* jieqi(int year, int month, int day) {
-    int n = 2 * (month - 1);
-    if (day > 15) {
+char* get_chinese_jieqi(int solarYear, int solarMonth, int solarDay) {
+    int n = 2 * (solarMonth - 1);
+    if (solarDay > 15) {
         n++;
     }
 
     char str[11] = {0};
-    format_date((unsigned)get_solar_term(year, n), str);
+    format_date((unsigned)get_solar_term(solarYear, n), str);
 
     char str2[11] = {0};
-    sprintf(str2, "%04d-%02d-%02d", year, month, day);
+    sprintf(str2, "%04d-%02d-%02d", solarYear, solarMonth, solarDay);
 
     if (strcmp(str, str2) == 0) {
         char *p = (char*)calloc(1, sizeof("立春") + 1);
@@ -303,17 +324,15 @@ char* jieqi(int year, int month, int day) {
     }
 }
 
-/* 得到指定年的全部节气和对应阳历日期
- * year  阳历的年
- * month 阳历的月
- * day   阳历的日
+/* 得到给定的阳历年的全部节气和对应阳历日期
+ * solarYear  阳历的年
  */
-char** jieqi_list(int year) {
+char** get_chinese_jieqi_list(int solarYear) {
     size_t y = 12 + sizeof("立春");
     char** list = malloc(sizeof(char*) * 24);
     for(int i = 0; i < 24; ++i) {
         char date[11] = {0};
-        format_date((unsigned)get_solar_term(year, i), date);
+        format_date((unsigned)get_solar_term(solarYear, i), date);
         list[i] = calloc(1, y);
         sprintf(list[i], "%s %s", solar_term_name[i], date);
     }
