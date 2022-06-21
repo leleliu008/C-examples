@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
                 printf("%x\n", bccsum);
             } else {
                 perror("invalid base16 encode str.");
+                return 1;
             }
         } else if (strcmp("hex", argv[1]) == 0) {
             char input[100];
@@ -58,6 +59,7 @@ int main(int argc, char *argv[]) {
                 printf("%x\n", bccsum);
             } else {
                 perror("invalid base16 encode str.");
+                return 1;
             }
         } else if (strcmp("str", argv[1]) == 0) {
             unsigned char bccsum = bcc((unsigned char *)argv[2], strlen(argv[2]) >> 1);

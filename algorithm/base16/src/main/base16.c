@@ -4,13 +4,15 @@
 #include <base16.h>
 
 static void help(int exitCode) {
-    printf("usage:\n");
-    printf("    -h|--help\n");
-    printf("    -V|--version\n\n");
-    printf("    base16 --encode <INPUT>\n");
-    printf("    base16 --decode <INPUT>\n\n");
-    printf("    echo | base16 --encode\n");
-    printf("    echo | base16 --decode\n");
+    printf("%s\n", "\
+usage:\n\
+-h|--help\n\
+-V|--version\n\n\
+base16 --encode <INPUT>\n\
+base16 --decode <INPUT>\n\n\
+echo | base16 --encode\n\
+echo | base16 --decode\n");
+
     exit(exitCode);
 }
 
@@ -67,6 +69,7 @@ int main(int argc, char *argv[]) {
                 printf("%s\n", output);
             } else {
                 perror("base16 --encode failed.");
+                return 1;
             }
         } else if (strcmp("--decode", argv[1]) == 0) {
             size_t inputLength = strlen(argv[2]);
@@ -77,6 +80,7 @@ int main(int argc, char *argv[]) {
                 printf("%s\n", (char*)bytes);
             } else {
                 perror("base16 --decode failed.");
+                return 1;
             }
         } else {
             help(1);
