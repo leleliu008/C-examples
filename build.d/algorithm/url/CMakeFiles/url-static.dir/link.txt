@@ -1,2 +1,0 @@
-/usr/bin/ar qc liburl.a "CMakeFiles/url-static.dir/src/lib/url.c.o"
-/usr/bin/ranlib liburl.a

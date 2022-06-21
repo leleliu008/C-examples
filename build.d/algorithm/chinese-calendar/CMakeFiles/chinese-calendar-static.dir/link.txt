@@ -1,2 +1,0 @@
-/usr/bin/ar qc libchinese-calendar.a "CMakeFiles/chinese-calendar-static.dir/src/lib/chinese-calendar.c.o"
-/usr/bin/ranlib libchinese-calendar.a

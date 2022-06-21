@@ -1,2 +1,0 @@
-/usr/bin/ar qc libbcc.a "CMakeFiles/bcc-static.dir/src/lib/bcc.c.o"
-/usr/bin/ranlib libbcc.a

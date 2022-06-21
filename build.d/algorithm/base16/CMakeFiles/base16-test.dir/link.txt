@@ -1,1 +1,0 @@
-/usr/bin/cc -O3 -DNDEBUG -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -rdynamic "CMakeFiles/base16-test.dir/src/test/base16.c.o" -o base16-test  -Wl,-rpath,/home/linuxbrew/.linuxbrew/Cellar/cunit/2.1-3/lib libbase16.a /home/linuxbrew/.linuxbrew/Cellar/cunit/2.1-3/lib/libcunit.so 

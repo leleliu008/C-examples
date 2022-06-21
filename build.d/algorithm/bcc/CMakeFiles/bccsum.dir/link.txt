@@ -1,1 +1,0 @@
-/usr/bin/cc -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -rdynamic CMakeFiles/bccsum.dir/src/main/bccsum.c.o CMakeFiles/bccsum.dir/__/base16/src/lib/base16.c.o -o bccsum  libbcc.a 

@@ -1,1 +1,0 @@
-/usr/bin/cc -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -rdynamic "CMakeFiles/chinese-calendar.dir/src/main/chinese-calendar.c.o" -o chinese-calendar  libchinese-calendar.a 

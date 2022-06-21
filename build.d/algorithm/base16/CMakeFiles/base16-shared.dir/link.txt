@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -O3 -DNDEBUG -L/home/linuxbrew/.linuxbrew/opt/python@3.10/lib -shared -Wl,-soname,libbase16.so -o libbase16.so "CMakeFiles/base16-shared.dir/src/lib/base16.c.o" 
