@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	printf("current working dir is %s\n", str1);
 	
 	char *str2 = getcwd(NULL, 0);
-	if(NULL != str2) {
+	if (NULL != str2) {
 		printf("current working dir is %s\n", str2);
 		free(str2);
 	}

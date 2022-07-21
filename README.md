@@ -17,6 +17,8 @@
 |library|mbedTLS|HMAC|[mbedTLS](http://blog.fpliu.com/it/software/mbedTLS) / [md.h](http://blog.fpliu.com/it/software/mbedTLS/include/md.h)的使用案例|
 |library|mbedTLS|PBKDF2|[mbedTLS](http://blog.fpliu.com/it/software/mbedTLS) / [pkcs5.h](http://blog.fpliu.com/it/software/mbedTLS/include/pkcs5.h)的使用案例|
 |||||
+|library|openssl|SHA256|[openssl](http://blog.fpliu.com/it/software/OpenSSL) / [sha.h](http://blog.fpliu.com/it/software/OpenSSL/include/sha.h)的使用案例|
+|||||
 |algorithm|base16||[Base16](http://blog.fpliu.com/it/data/text/coding/Base16)算法的实现|
 |algorithm|url||[URL](http://blog.fpliu.com/it/data/text/coding/URL)编解码算法的实现|
 |algorithm|bcc||[BCC](http://blog.fpliu.com/it/algorithm/check/BCC)校验算法的实现|

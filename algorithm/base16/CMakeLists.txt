@@ -7,9 +7,10 @@ set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 0)
 
-if (NOT CMAKE_BUILD_TYPE)
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE Release)
 endif()
+
 ########################################################################################
 
 add_library(base16-static STATIC src/lib/base16.c)
@@ -44,27 +45,15 @@ install(
 set(CMAKE_INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/base16")
 
 install(
-    TARGETS     base16-static
-    EXPORT      base16-staticTargets
+    TARGETS     base16-static base16-shared
+    EXPORT      base16Targets
     ARCHIVE
     DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
-install(
-    EXPORT      base16-staticTargets
-    FILE        base16-staticTargets.cmake
-    NAMESPACE   base16::
-    DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
-)
 
 install(
-    TARGETS     base16-shared
-    EXPORT      base16-sharedTargets
-    LIBRARY
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-)
-install(
-    EXPORT      base16-sharedTargets
-    FILE        base16-sharedTargets.cmake
+    EXPORT      base16Targets
+    FILE        base16Targets.cmake
     NAMESPACE   base16::
     DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
 )

@@ -11,6 +11,7 @@ int main() {
 	} else if (pid == 0) {
 		printf("i'm child process and my pid is %d\n", getpid());
 		data = 20;
+        sleep(5);
 		execlp("ls", "ls", "-l", NULL);
 	} else {
 		printf("i'm parent process and my pid is %d\n", getpid());

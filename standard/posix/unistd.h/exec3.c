@@ -3,10 +3,11 @@
 
 int main() {
 	pid_t pid = fork();
-	if(pid < 0) {
+
+	if (pid < 0) {
 		perror("fork error!");
-	} else if(0 == pid) {
-		if(execl("/bin/echo", "", "executed by execl!", NULL) < 0) {
+	} else if (0 == pid) {
+		if (execl("/bin/ls", "/bin/ls", NULL) < 0) {
 			perror("execl error!");
 		}
 	}
