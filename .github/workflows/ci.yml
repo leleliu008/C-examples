@@ -19,7 +19,13 @@ jobs:
       - uses: actions/checkout@main
 
       - run:  brew update
-      - run:  brew install cmake tree curl openssl libarchive libyaml libqrencode
+      - run:  brew install cmake
+      - run:  brew install tree
+      - run:  brew install curl
+      - run:  brew install openssl
+      - run:  brew install libyaml
+      - run:  brew install libarchive
+      - run:  brew install libqrencode
       - run:  cmake --version
       - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
       - run:  cmake --build   build.d
