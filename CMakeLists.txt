@@ -15,6 +15,8 @@ add_subdirectory(algorithm/url)
 add_subdirectory(algorithm/chinese-calendar)
 
 add_subdirectory(library/openssl/SHA-256)
+add_subdirectory(library/cJSON)
+add_subdirectory(library/libyaml)
 add_subdirectory(library/libcurl)
 add_subdirectory(library/libarchive)
 #add_subdirectory(library/qrencode)

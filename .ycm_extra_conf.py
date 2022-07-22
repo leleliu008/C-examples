@@ -90,7 +90,7 @@ flags = [
 '-I',
 './library/qrencode/src/include',
 '-I',
-'./library/cJSON/src/lib',
+'./library/cJSON',
 '-I',
 '/home/linuxbrew/.linuxbrew/include/',
 '-isystem',
