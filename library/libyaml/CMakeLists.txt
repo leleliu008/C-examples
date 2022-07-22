@@ -8,7 +8,7 @@ endif()
 
 ########################################################################################
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 find_package(PkgConfig REQUIRED)
 find_package(LibYaml   REQUIRED)

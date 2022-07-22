@@ -15,7 +15,8 @@ else()
         set(LIBQRENCODE_LIBRARY_NAMES qrencode)
     endif()
     
-    include(FindPkgConfig)
+    find_package(PkgConfig)
+
     if (PKG_CONFIG_FOUND)
         pkg_check_modules(PKG_CONFIG_LIBQRENCODE QUIET libqrencode)
         
