@@ -5,20 +5,24 @@
 #include <string.h>
 #include <qrencode.h>
 
-static void help(int exitCode) {
-    printf("usage:\n");
-    printf("    -h|--help\n");
-    printf("    -V|--version\n\n");
-    printf("    qrencode <INPUT>\n");
-    printf("    echo | qrencode\n");
+static void show_help_then_exit(int exitCode) {
+    const char * helpStr = "usage:\n    -h|--help\n    -V|--version\n\n    qrencode <INPUT>\n    echo | qrencode\n";
+
+    if (exitCode == 0) {
+        fprintf(stdout, "%s", helpStr);
+    } else {
+        fprintf(stderr, "%s", helpStr);
+    }
+
     exit(exitCode);
 }
 
-static void version() {
+static void show_version_then_exit() {
     printf("%s\n", "1.0.0");
+    exit(0);
 }
 
-static int qrencode(char* input) {
+static int qr_encode(char * input) {
     QRcode* qrcode = QRcode_encodeString(input, 1, QR_ECLEVEL_H, QR_MODE_8, 1);
 
     if (NULL == qrcode) {
@@ -46,24 +50,24 @@ static int qrencode(char* input) {
 
 int main(int argc, char* argv[]) {
     if (1 == argc) {
-        char input[100];
-        scanf("%s\n", input);
-        return qrencode(input);
+        char input[255];
+        scanf("254%s\n", input);
+        return qr_encode(input);
     } else if (2 == argc) {
         if (strcmp("-h", argv[1]) == 0) {
-            help(0);
+            show_help_then_exit(0);
         } else if (strcmp("--help", argv[1]) == 0) {
-            help(0);
+            show_help_then_exit(0);
         } else if (strcmp("-V", argv[1]) == 0) {
-            version();
+            show_version_then_exit();
             return 0;
         } else if (strcmp("--version", argv[1]) == 0) {
-            version();
+            show_version_then_exit();
             return 0;
         } else {
-            return qrencode(argv[1]);
+            return qr_encode(argv[1]);
         }
     } else {
-        help(1);
+        show_help_then_exit(1);
     }
 }

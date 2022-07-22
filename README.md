@@ -5,8 +5,6 @@
 |standard|iso||`ISO C`的一些测试文件，其中大部分需要通过[GDB](http://blog.fpliu.com/it/software/GNU/GDB)调试进行查看|
 |standard|posix||[POSIX](http://blog.fpliu.com/it/organization/IEEE/POSIX)标准的测试文件|
 |||||
-|library|cJSON||[cJSON](http://blog.fpliu.com/it/software/development/language/C/library/cJSON)的使用案例|
-|library|qrencode||[qrencode](http://blog.fpliu.com/it/software/qrencode)的使用案例|
 |library|mbedTLS|base64|[mbedTLS](http://blog.fpliu.com/it/software/mbedTLS) / [base64.h](http://blog.fpliu.com/it/software/mbedTLS/include/base64.h)的使用案例|
 |library|mbedTLS|AES|[mbedTLS](http://blog.fpliu.com/it/software/mbedTLS) / [aes.h](http://blog.fpliu.com/it/software/mbedTLS/include/aes.h)的使用案例|
 |library|mbedTLS|MD5|[mbedTLS](http://blog.fpliu.com/it/software/mbedTLS) / [md5.h](http://blog.fpliu.com/it/software/mbedTLS/include/md5.h)的使用案例|
@@ -20,6 +18,14 @@
 |library|openssl|SHA256|[openssl](http://blog.fpliu.com/it/software/OpenSSL) / [sha.h](http://blog.fpliu.com/it/software/OpenSSL/include/sha.h)的使用案例|
 |||||
 |library|libcurl||[libcurl](http://blog.fpliu.com/it/software/curl)的使用案例|
+|||||
+|library|cJSON||[cJSON](http://blog.fpliu.com/it/software/development/language/C/library/cJSON)的使用案例|
+|||||
+|library|libyaml||[libyaml](http://blog.fpliu.com/it/software/development/language/C/library/libyaml)的使用案例|
+|||||
+|library|libarchive||[libarchive](http://blog.fpliu.com/it/software/development/language/C/library/libarchive)的使用案例|
+|||||
+|library|qrencode||[qrencode](http://blog.fpliu.com/it/software/qrencode)的使用案例|
 |||||
 |algorithm|base16||[Base16](http://blog.fpliu.com/it/data/text/coding/Base16)算法的实现|
 |algorithm|url||[URL](http://blog.fpliu.com/it/data/text/coding/URL)编解码算法的实现|
