@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libhttp
+URL: https://github.com/leleliu008/C
+Description: http C API
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lssl -lcurl -lhttp
+Cflags: -I${includedir}

@@ -19,6 +19,8 @@
 |||||
 |library|openssl|SHA256|[openssl](http://blog.fpliu.com/it/software/OpenSSL) / [sha.h](http://blog.fpliu.com/it/software/OpenSSL/include/sha.h)的使用案例|
 |||||
+|library|libcurl||[libcurl](http://blog.fpliu.com/it/software/curl)的使用案例|
+|||||
 |algorithm|base16||[Base16](http://blog.fpliu.com/it/data/text/coding/Base16)算法的实现|
 |algorithm|url||[URL](http://blog.fpliu.com/it/data/text/coding/URL)编解码算法的实现|
 |algorithm|bcc||[BCC](http://blog.fpliu.com/it/algorithm/check/BCC)校验算法的实现|

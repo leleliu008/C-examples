@@ -84,6 +84,8 @@ flags = [
 '-I',
 './library/openssl/SHA-256/src/include',
 '-I',
+'./library/libcurl/src/include',
+'-I',
 './library/cJSON/src/lib',
 '-I',
 '/home/linuxbrew/.linuxbrew/include/',
