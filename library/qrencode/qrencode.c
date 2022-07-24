@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include <qrencode.h>
 
 static void show_help_then_exit(int exitCode) {
