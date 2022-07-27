@@ -8,16 +8,27 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	char buff[1024] = {0};
-	getcwd(buff, sizeof(buff));
+    const char * cwd = NULL;
 
-	printf("current working dir is %s\n", buff);
-	printf("change dir to %s\n", argv[1]);
+    for (int length = 100; cwd == NULL; length += 100) {
+        char buff[length];
+        memset(buff, 0, length);
+        cwd = getcwd(buff, length);
+    }
+
+    printf("current working dir is %s\n", cwd);
+	printf("change  working dir to %s\n", argv[1]);
 
 	if (chdir(argv[1]) == 0) {
-        memset(buff, 0, 1024);
-		getcwd(buff, sizeof(buff));
-		printf("current working dir is %s\n", buff);
+        const char * cwd = NULL;
+
+        for (int length = 100; cwd == NULL; length += 100) {
+            char buff[length];
+            memset(buff, 0, length);
+            cwd = getcwd(buff, length);
+        }
+
+        printf("current working dir is %s\n", cwd);
 	    return 0;
 	} else {
 		perror(argv[1]);

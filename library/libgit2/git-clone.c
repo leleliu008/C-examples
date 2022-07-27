@@ -70,18 +70,18 @@ int do_git_clone(const char * url, const char * filepath) {
 
     git_repository * gitRepo = NULL;
 
-    git_clone_options    gitCloneOptions    = GIT_CLONE_OPTIONS_INIT;
     git_checkout_options gitCheckoutOptions = GIT_CHECKOUT_OPTIONS_INIT;
 
     gitCheckoutOptions.checkout_strategy    = GIT_CHECKOUT_SAFE;
 	gitCheckoutOptions.progress_cb          = git_checkout_progress_callback;
 	gitCheckoutOptions.progress_payload     = &progressPayload;
 
-	gitCloneOptions.checkout_opts = gitCheckoutOptions;
+    git_clone_options    gitCloneOptions    = GIT_CLONE_OPTIONS_INIT;
 
+	gitCloneOptions.checkout_opts = gitCheckoutOptions;
+	gitCloneOptions.fetch_opts.callbacks.credentials       = git_credential_acquire_callback;
 	gitCloneOptions.fetch_opts.callbacks.sideband_progress = git_transport_message_callback;
 	gitCloneOptions.fetch_opts.callbacks.transfer_progress = git_indexer_progress_callback;
-	gitCloneOptions.fetch_opts.callbacks.credentials       = git_credential_acquire_callback;
 	gitCloneOptions.fetch_opts.callbacks.payload           = &progressPayload;
     gitCloneOptions.bare = false;
 

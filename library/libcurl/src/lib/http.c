@@ -11,20 +11,20 @@ static size_t write_data_to_file(void * ptr, size_t size, size_t nmemb, void * s
     return fwrite(ptr, size, nmemb, (FILE *)stream);
 }
 
-int http_fetch(char * url, FILE * outputFile, bool verbose, bool showProgress) {
+int http_fetch(const char * url, FILE * outputFile, bool verbose, bool showProgress) {
     if (outputFile == NULL) {
-        char pwd[100] = {0};
-        getcwd(pwd, 100);
+        int urlLength = strlen(url);
+        int urlCopyLength = urlLength + 1;
+        char urlCopy[urlCopyLength];
+        memset(urlCopy, 0, urlCopyLength);
+        strncpy(urlCopy, url, urlLength);
 
-        const char * filename = basename(url);
+        const char * filename = basename(urlCopy);
 
-        char filepath[200] = {0};
-        sprintf(filepath, "%s/%s", pwd, filename);
-
-        outputFile = fopen(filepath, "wb");
+        outputFile = fopen(filename, "wb");
 
         if (outputFile == NULL) {
-            perror(filepath);
+            perror(filename);
             return 1;
         }
     }

@@ -8,7 +8,7 @@
         extern "C"
     #endif
 
-        int http_fetch(char * url, FILE * outputFile, bool verbose, bool showProgress);
+        int http_fetch(const char * url, FILE * outputFile, bool verbose, bool showProgress);
 
     #ifdef __cplasplas
         }
