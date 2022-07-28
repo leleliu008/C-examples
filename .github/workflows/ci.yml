@@ -21,7 +21,7 @@ jobs:
       - run:  brew update
       - run:  brew install cmake ninja tree
 
-      - run:  echo "VCPKG_ROOT='$HOME/.vcpkg/root'" >> "GITHUB_ENV"
+      - run:  echo "VCPKG_ROOT='$HOME/.vcpkg/root'" >> "$GITHUB_ENV"
       - run:  install -d $VCPKG_ROOT
       - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
 
