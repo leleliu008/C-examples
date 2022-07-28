@@ -30,10 +30,10 @@ jobs:
               sudo apt -y install linux-headers-generic
           fi
 
-      - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
+      - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode
 
       - run:  cmake --version
-      - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
+      - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=OFF -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
       - run:  cmake --build   build.d
       - run:  cmake --install build.d
       - run:  tree output

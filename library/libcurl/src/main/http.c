@@ -40,9 +40,9 @@ static void show_help_then_exit(int exitCode) {
 	const char * helpStr = "Usage: http <URL> [--verbose] [--show-progress] [-o FILENAME]\n";
 
     if (exitCode == 0) {
-        write(1, helpStr, strlen(helpStr));
+        fprintf(stdout, "%s\n", helpStr);
     } else {
-        write(2, helpStr, strlen(helpStr));
+        fprintf(stderr, "%s\n", helpStr);
     }
 
 	exit(exitCode);

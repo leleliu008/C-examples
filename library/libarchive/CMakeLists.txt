@@ -15,8 +15,14 @@ endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
 
+# https://cmake.org/cmake/help/v3.0/module/FindBZip2.html
+# https://cmake.org/cmake/help/latest/module/FindLibLZMA.html
 find_package(PkgConfig  REQUIRED)
 find_package(LibArchive REQUIRED)
+find_package(BZip2      REQUIRED)
+find_package(LibLZMA    REQUIRED)
+find_package(ZLIB       REQUIRED)
+find_package(zstd       REQUIRED)
 
 ########################################################################################
 
@@ -32,11 +38,22 @@ target_include_directories(untar-shared PRIVATE "${LIBARCHIVE_INCLUDE_DIR}")
 target_link_libraries(untar-static "${LIBARCHIVE_LIBRARY}")
 target_link_libraries(untar-shared "${LIBARCHIVE_LIBRARY}")
 
+target_link_libraries(untar-static "${BZIP2_LIBRARY_RELEASE}")
+target_link_libraries(untar-shared "${BZIP2_LIBRARY_RELEASE}")
+
+target_link_libraries(untar-static "${LIBLZMA_LIBRARY_RELEASE}")
+target_link_libraries(untar-shared "${LIBLZMA_LIBRARY_RELEASE}")
+
+target_link_libraries(untar-static "${ZLIB_LIBRARY_RELEASE}")
+target_link_libraries(untar-shared "${ZLIB_LIBRARY_RELEASE}")
+
+target_link_libraries(untar-static zstd::libzstd_static)
+target_link_libraries(untar-shared zstd::libzstd_static)
 ########################################################################################
 
 add_executable(untar src/main/untar.c)
 target_link_libraries(untar untar-static)
-target_link_libraries(untar "${LIBARCHIVE_LIBRARY}")
+#target_link_libraries(untar "${LIBARCHIVE_LIBRARY}")
 target_include_directories(untar PRIVATE "${LIBARCHIVE_INCLUDE_DIR}")
 
 ########################################################################################
