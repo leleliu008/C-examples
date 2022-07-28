@@ -24,7 +24,7 @@ jobs:
       - run:  brew update
       - run:  brew install cmake ninja tree vcpkg
 
-      - run:  mkdir $VCPKG_ROOT
+      - run:  install $VCPKG_ROOT
       - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
 
       - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
