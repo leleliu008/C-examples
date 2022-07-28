@@ -27,7 +27,7 @@ jobs:
 
       - run: |
           if [ "$(uname)" = Linux ] ; then
-              brew install linux-headers
+              sudo apt -y install linux-headers
           fi
 
       - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
