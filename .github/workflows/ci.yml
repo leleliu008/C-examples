@@ -15,20 +15,22 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      VCPKG_ROOT: ~/.vcpkg/root
+
     steps:
       - uses: actions/checkout@main
 
       - run:  brew update
-      - run:  brew install cmake
-      - run:  brew install tree
-      - run:  brew install curl
-      - run:  brew install libgit2
-      - run:  brew install openssl
-      - run:  brew install libyaml
-      - run:  brew install libarchive
-      - run:  brew install libqrencode
+      - run:  brew install cmake ninja tree vcpkg
+
+      - run:  mkdir $VCPKG_ROOT
+      - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
+
+      - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
+
       - run:  cmake --version
-      - run:  cmake -S . -B   build.d -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
+      - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
       - run:  cmake --build   build.d
       - run:  cmake --install build.d
       - run:  tree output

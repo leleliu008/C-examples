@@ -33,15 +33,38 @@
 |algorithm|lrc||[LRC](http://blog.fpliu.com/it/algorithm/check/LRC)校验算法的实现|
 |algorithm|chinese-calendar||中国阳历日期转换为阴历日期、节气、节日算法的实现|
 
-## 编译
-每个模块都可以独立编译。也可以整体编译。
-```bash
-cmake -S . -B build.d -DCMAKE_INSTALL_PREFIX=./output -DENABLE_TESTING=ON
-cmake --build build.d --target install
-```
-**Note:** if `-DENABLE_TESTING=ON` is given, [CUnit](http://cunit.sourceforge.net/) should be installed.
+## 编译 & 安装
 
-## 运行单元测试程序
+**step1. 安装`vcpkg`**
+```bash
+git clone https://github.com/microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.sh
+export VCPKG_ROOT="$PWD/vcpkg"
+export PATH="$VCPKG_ROOT:$PATH"
+```
+
+**step2. 通过`vcpkg`安装依赖库**
+```bash
+vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
+```
+
+**step3. 配置**
+```bash
+cmake -S . -B build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DCMAKE_VERBOSE_MAKEFILE=ON -DENABLE_TESTING=ON
+```
+
+**step4. 编译**
+```bash
+cmake --build build.d
+```
+
+**step5. 安装**
+```bash
+cmake --install build.d
+```
+
+ **step6. 运行单元测试程序**
 ```bash
 ctest --test-dir build.d/algorithm/base16
 ```
