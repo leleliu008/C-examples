@@ -27,7 +27,7 @@ jobs:
 
       - run: |
           if [ "$(uname)" = Linux ] ; then
-              sudo apt -y install linux-headers
+              sudo apt -y install linux-headers-generic
           fi
 
       - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
