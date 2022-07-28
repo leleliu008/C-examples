@@ -22,9 +22,9 @@ jobs:
       - uses: actions/checkout@main
 
       - run:  brew update
-      - run:  brew install cmake ninja tree vcpkg
+      - run:  brew install cmake ninja tree
 
-      - run:  install $VCPKG_ROOT
+      - run:  install -d $VCPKG_ROOT
       - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
 
       - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode cunit
