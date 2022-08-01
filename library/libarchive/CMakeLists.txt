@@ -9,7 +9,7 @@ set(PROJECT_VERSION_PATCH 0)
 
 include_directories(src/include)
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 

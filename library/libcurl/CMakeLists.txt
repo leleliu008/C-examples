@@ -14,7 +14,7 @@ include_directories(src/include)
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 

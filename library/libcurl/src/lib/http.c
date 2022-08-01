@@ -7,7 +7,7 @@
 #include <curl/curl.h>
 #include <http.h>
 
-static size_t write_data_to_file(void * ptr, size_t size, size_t nmemb, void * stream) {
+static size_t write_callback(void * ptr, size_t size, size_t nmemb, void * stream) {
     return fwrite(ptr, size, nmemb, (FILE *)stream);
 }
 
@@ -35,7 +35,7 @@ int http_fetch(const char * url, FILE * outputFile, bool verbose, bool showProgr
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
 
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data_to_file);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, outputFile);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);

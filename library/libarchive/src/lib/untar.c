@@ -71,6 +71,7 @@ int untar_extract(const char * outputDir, const char * inputFilePath, int flags,
 		resultCode = archive_read_next_header(ar, &entry);
 
 		if (resultCode == ARCHIVE_EOF) {
+            resultCode =  ARCHIVE_OK;
 			break;
         }
 
