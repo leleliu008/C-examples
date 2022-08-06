@@ -79,22 +79,21 @@ int untar_extract(const char * outputDir, const char * inputFilePath, int flags,
             goto clean;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////
+
         const char * entry_pathname = archive_entry_pathname(entry);
 
-        size_t entry_pathname_length = strlen(entry_pathname);
-
         if (stripComponentsNumber > 0) {
-            bool contains_slash = false;
+            size_t entry_pathname_length = strlen(entry_pathname);
 
             for (size_t i = 0; i < entry_pathname_length; i++) {
                 if (entry_pathname[i] == '/') {
                     entry_pathname = entry_pathname + i + 1;
-                    contains_slash = true;
                     break;
                 }
             }
 
-            if (!contains_slash) {
+            if (strcmp(entry_pathname, "") == 0) {
                 break;
             }
         }
@@ -104,12 +103,42 @@ int untar_extract(const char * outputDir, const char * inputFilePath, int flags,
         }
 
         if ((outputDir != NULL) && (strcmp(outputDir, "") != 0)) {
-            size_t outputFilePathLength = strlen(outputDir) + entry_pathname_length + 2;
+            size_t outputFilePathLength = strlen(outputDir) + strlen(entry_pathname) + 2;
             char outputFilePath[outputFilePathLength];
             memset(outputFilePath, 0, outputFilePathLength);
             sprintf(outputFilePath, "%s/%s", outputDir, entry_pathname);
             archive_entry_set_pathname(entry, outputFilePath);
+        } else {
+            archive_entry_set_pathname(entry, entry_pathname);
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        const char * hardlinkname = archive_entry_hardlink(entry);
+
+        if (hardlinkname != NULL) {
+            if (stripComponentsNumber > 0) {
+                size_t hardlinkname_length = strlen(hardlinkname);
+                for (size_t i = 0; i < hardlinkname_length; i++) {
+                    if (hardlinkname[i] == '/') {
+                        hardlinkname = hardlinkname + i + 1;
+                        break;
+                    }
+                }
+
+                if ((outputDir != NULL) && (strcmp(outputDir, "") != 0)) {
+                    size_t outputFilePathLength = strlen(outputDir) + strlen(hardlinkname) + 2;
+                    char outputFilePath[outputFilePathLength];
+                    memset(outputFilePath, 0, outputFilePathLength);
+                    sprintf(outputFilePath, "%s/%s", outputDir, hardlinkname);
+                    archive_entry_set_hardlink_utf8(entry, outputFilePath);
+                } else {
+                    archive_entry_set_hardlink_utf8(entry, hardlinkname);
+                }
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
 
         resultCode = archive_write_header(aw, entry);
 
