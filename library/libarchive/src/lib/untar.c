@@ -94,7 +94,7 @@ int untar_extract(const char * outputDir, const char * inputFilePath, int flags,
             }
 
             if (strcmp(entry_pathname, "") == 0) {
-                break;
+                continue;
             }
         }
 
