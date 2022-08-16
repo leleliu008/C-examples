@@ -1,4 +1,5 @@
 #include <string.h>
+#include <locale.h>
 #include <untar.h>
 
 int untar_list(const char * inputFilePath, int flags) {
@@ -9,8 +10,8 @@ int untar_list(const char * inputFilePath, int flags) {
     struct archive *ar = archive_read_new();
     struct archive *aw = archive_write_disk_new();
 
+    archive_read_support_format_all(ar);
     archive_read_support_filter_all(ar);
-    archive_read_support_format_tar(ar);
 
     archive_write_disk_set_options(aw, flags);
 
@@ -37,6 +38,10 @@ int untar_list(const char * inputFilePath, int flags) {
 	}
 
 clean:
+    if (resultCode != ARCHIVE_OK) {
+        fprintf(stdout, "%s\n", archive_error_string(ar));
+    }
+
 	archive_read_close(ar);
 	archive_read_free(ar);
 
@@ -51,11 +56,14 @@ int untar_extract(const char * outputDir, const char * inputFilePath, int flags,
 		inputFilePath = NULL;
     }
 
+    // https://github.com/libarchive/libarchive/issues/459
+    setlocale(LC_ALL, "");
+
 	struct archive *ar = archive_read_new();
 	struct archive *aw = archive_write_disk_new();
 
+    archive_read_support_format_all(ar);
     archive_read_support_filter_all(ar);
-    archive_read_support_format_tar(ar);
 
 	archive_write_disk_set_options(aw, flags);
 
@@ -180,6 +188,10 @@ int untar_extract(const char * outputDir, const char * inputFilePath, int flags,
 	}
 
 clean:
+    if (resultCode != ARCHIVE_OK) {
+        fprintf(stdout, "%s\n", archive_error_string(ar));
+    }
+
 	archive_read_close(ar);
 	archive_read_free(ar);
 	
