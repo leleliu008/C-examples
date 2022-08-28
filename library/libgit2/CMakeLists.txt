@@ -12,52 +12,30 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 find_package(PkgConfig REQUIRED)
 find_package(LibGit2   REQUIRED)
-find_package(OpenSSL   REQUIRED)
-find_package(ZLIB      REQUIRED)
-
 
 ########################################################################################
 
-add_executable(git-open         git-open.c)
-add_executable(git-pull         git-pull.c)
-add_executable(git-fetch        git-fetch.c)
-add_executable(git-clone        git-clone.c)
-add_executable(git-clone-simple git-clone-simple.c)
-add_executable(git-status-list  git-status-list.c)
-add_executable(git-remote-list  git-remote-list.c)
-add_executable(git-branch-list  git-branch-list.c)
-add_executable(git-config-list  git-config-list.c)
-add_executable(git-tag-name-list  git-tag-name-list.c)
+add_executable(git-open          git-open.c)
+add_executable(git-pull          git-pull.c)
+add_executable(git-fetch         git-fetch.c)
+add_executable(git-clone         git-clone.c)
+add_executable(git-clone-simple  git-clone-simple.c)
+add_executable(git-status-list   git-status-list.c)
+add_executable(git-remote-list   git-remote-list.c)
+add_executable(git-branch-list   git-branch-list.c)
+add_executable(git-config-list   git-config-list.c)
+add_executable(git-tag-name-list git-tag-name-list.c)
 
-target_link_libraries(     git-open         PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-open         PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-pull         PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-pull         PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-fetch        PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-fetch        PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-clone        PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-clone        PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-clone-simple PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-clone-simple PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-status-list  PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-status-list  PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-remote-list  PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-remote-list  PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-branch-list  PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-branch-list  PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-config-list  PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-config-list  PRIVATE "${LIBGIT2_INCLUDE_DIR}")
-
-target_link_libraries(     git-tag-name-list  PRIVATE "${LIBGIT2_LIBRARY};-lssl;-lcrypto;-lz;-lhttp_parser;-lpcre")
-target_include_directories(git-tag-name-list  PRIVATE "${LIBGIT2_INCLUDE_DIR}")
+target_link_libraries(git-open          LIBGIT2::LIBGIT2)
+target_link_libraries(git-pull          LIBGIT2::LIBGIT2)
+target_link_libraries(git-fetch         LIBGIT2::LIBGIT2)
+target_link_libraries(git-clone         LIBGIT2::LIBGIT2)
+target_link_libraries(git-clone-simple  LIBGIT2::LIBGIT2)
+target_link_libraries(git-status-list   LIBGIT2::LIBGIT2)
+target_link_libraries(git-remote-list   LIBGIT2::LIBGIT2)
+target_link_libraries(git-branch-list   LIBGIT2::LIBGIT2)
+target_link_libraries(git-config-list   LIBGIT2::LIBGIT2)
+target_link_libraries(git-tag-name-list LIBGIT2::LIBGIT2)
 
 ########################################################################################
 
