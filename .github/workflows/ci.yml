@@ -7,11 +7,11 @@ on:
     branches: [ master ]
 
 jobs:
-  build-on-unix:
+  macos:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04, macos-10.15, macos-11]
+        os: [macos-10.15, macos-11]
 
     runs-on: ${{ matrix.os }}
 
@@ -24,13 +24,7 @@ jobs:
       - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
       - run:  install -d $VCPKG_ROOT
       - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
-
-      - run: |
-          if [ "$(uname)" = Linux ] ; then
-              sudo apt -y install linux-headers-generic
-          fi
-
-      - run:  vcpkg install curl libyaml libgit2 libarchive libqrencode
+      - run:  vcpkg install curl openssl libyaml libgit2 libarchive libqrencode
 
       - run:  cmake --version
       - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=OFF -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
@@ -38,20 +32,28 @@ jobs:
       - run:  cmake --install build.d
       - run:  tree output
 
-  build-on-windows:
+  ubuntu:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
+        tag: [20.04, 22.04]
 
-    runs-on: ${{ matrix.os }}
+    runs-on:   ubuntu-latest
+    container: ubuntu-${{ matrix.tag }}
 
     steps:
       - uses: actions/checkout@main
 
-      - run:  choco install -y cmake tree
+      - run:  apt -y update
+      - run:  apt -y install gcc linux-headers-generic cmake ninja tree git
+
+      - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
+      - run:  install -d $VCPKG_ROOT
+      - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
+      - run:  vcpkg install curl openssl libyaml libgit2 libarchive libqrencode
+
       - run:  cmake --version
-      - run:  cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=ON -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON -S . -B build.d
+      - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=OFF -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
       - run:  cmake --build   build.d
       - run:  cmake --install build.d
       - run:  tree output
