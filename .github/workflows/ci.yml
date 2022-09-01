@@ -22,8 +22,10 @@ jobs:
       - run:  brew install cmake ninja tree
 
       - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
+      - run:  echo "PATH=$VCPKG_ROOT:$PATH"       >> "$GITHUB_ENV"
       - run:  install -d $VCPKG_ROOT
       - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
+      - run:  cd $VCPKG_ROOT && ./bootstrap-vcpkg.sh
       - run:  vcpkg install curl openssl libyaml libgit2 libarchive libqrencode
 
       - run:  cmake --version
@@ -48,8 +50,10 @@ jobs:
       - run:  apt -y install gcc linux-headers-generic cmake ninja-build tree git
 
       - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
+      - run:  echo "PATH=$VCPKG_ROOT:$PATH"       >> "$GITHUB_ENV"
       - run:  install -d $VCPKG_ROOT
       - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
+      - run:  cd $VCPKG_ROOT && ./bootstrap-vcpkg.sh
       - run:  vcpkg install curl openssl libyaml libgit2 libarchive libqrencode
 
       - run:  cmake --version
