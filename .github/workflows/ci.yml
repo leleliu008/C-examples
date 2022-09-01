@@ -39,7 +39,7 @@ jobs:
         tag: [20.04, 22.04]
 
     runs-on:   ubuntu-latest
-    container: ubuntu-${{ matrix.tag }}
+    container: ubuntu:${{ matrix.tag }}
 
     steps:
       - uses: actions/checkout@main
