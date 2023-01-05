@@ -33,9 +33,10 @@ int main(int argc, char *argv[]) {
         } else if (strcmp("hex", argv[1]) == 0) {
             char input[100];
             scanf("%s", input);
-            unsigned short nBytes = strlen(input) >> 1;
+            size_t inputSizeInBytes = strlen(input);
+            size_t nBytes = inputSizeInBytes >> 1;
             unsigned char bytes[nBytes];
-            if (base16_decode(bytes, input) == 0) {
+            if (base16_decode(bytes, input, inputSizeInBytes) == 0) {
                 unsigned char bccsum  = bcc(bytes, nBytes);
                 printf("%x\n", bccsum);
             } else {
@@ -52,9 +53,10 @@ int main(int argc, char *argv[]) {
         }
     } else if (argc == 3) {
         if (strcmp("hex", argv[1]) == 0) {
-            unsigned short nBytes = strlen(argv[2]) >> 1;
+            size_t inputSizeInBytes = strlen(argv[2]);
+            size_t nBytes = inputSizeInBytes >> 1;
             unsigned char bytes[nBytes];
-            if (base16_decode(bytes, argv[2]) == 0) {
+            if (base16_decode(bytes, argv[2], inputSizeInBytes) == 0) {
                 unsigned char bccsum  = bcc(bytes, nBytes);
                 printf("%x\n", bccsum);
             } else {

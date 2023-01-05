@@ -11,9 +11,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-10.15, macos-11]
+        version: [12, 11]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-${{ matrix.version }}
 
     steps:
       - uses: actions/checkout@main
