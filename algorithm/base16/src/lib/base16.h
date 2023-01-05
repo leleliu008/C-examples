@@ -14,12 +14,12 @@
              * inputLengthInBytes   要编码的字节的长度
              * isToUpper            是否编码为大写字母
              */
-            int base16_encode(char* output, unsigned char* input, size_t inputLengthInBytes, bool isToUpper);
+            int base16_encode(char * output, const unsigned char * input, size_t inputSizeInBytes, bool isToUpper);
 
             /* base16解码
              * input base16编码的字符串
              */
-            int base16_decode(unsigned char* output, char* input);
+            int base16_decode(unsigned char * output, const char * input, size_t inputSizeInBytes);
 
     #ifdef __cplusplus
         }
