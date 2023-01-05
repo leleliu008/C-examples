@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@main
 
       - run:  apt -y update
-      - run:  apt -y install gcc linux-headers-generic cmake ninja-build tree git curl zip unzip tar
+      - run:  apt -y install g++ linux-headers-generic cmake ninja-build tree git curl zip unzip tar
 
       - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
       - run:  echo "PATH=$VCPKG_ROOT:$PATH"       >> "$GITHUB_ENV"
