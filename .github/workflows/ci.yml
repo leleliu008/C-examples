@@ -43,6 +43,10 @@ jobs:
     runs-on:   ubuntu-latest
     container: ubuntu:${{ matrix.tag }}
 
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      TZ: Europe/London
+
     steps:
       - uses: actions/checkout@main
 
