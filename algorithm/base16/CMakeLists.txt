@@ -21,15 +21,21 @@ set_target_properties(base16-shared PROPERTIES OUTPUT_NAME base16 CLEAN_DIRECT_O
 
 ########################################################################################
 
-add_executable(base16 src/main/base16.c)
-target_link_libraries(base16 base16-static)
-target_include_directories(base16 PRIVATE src/lib)
+add_executable(base16-encode src/main/base16-encode.c)
+target_link_libraries(base16-encode base16-static)
+target_include_directories(base16-encode PRIVATE src/lib)
+
+add_executable(base16-decode src/main/base16-decode.c)
+target_link_libraries(base16-decode base16-static)
+target_include_directories(base16-decode PRIVATE src/lib)
 
 ########################################################################################
 
 include(GNUInstallDirs)
 
-install(TARGETS base16        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS base16-encode RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS base16-decode RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 install(FILES   src/lib/base16.h       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 ########################################################################################
