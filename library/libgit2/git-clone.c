@@ -38,12 +38,21 @@ void git_checkout_progress_callback(const char *path, size_t completed_steps, si
 // https://libgit2.org/libgit2/#HEAD/group/callback/git_credential_acquire_cb
 int git_credential_acquire_callback(git_credential **credential, const char *url, const char *username_from_url, unsigned int allowed_types, void *payload) {
     const char * userHomeDir = getenv("HOME");
+
+    if (userHomeDir == NULL) {
+        return 1;
+    }
+
     int userHomeDirLength = strlen(userHomeDir);
 
-    int length = userHomeDirLength + 20;
-    char sshPrivateKeyFilePath[length];
-    memset(sshPrivateKeyFilePath, 0, length);
-    sprintf(sshPrivateKeyFilePath, "%s/.ssh/id_rsa", userHomeDir);
+    if (userHomeDirLength == 0) {
+        return 1;
+    }
+
+    size_t  sshPrivateKeyFilePathLength = userHomeDirLength + 20;
+    char    sshPrivateKeyFilePath[sshPrivateKeyFilePathLength];
+    memset( sshPrivateKeyFilePath, 0, sshPrivateKeyFilePathLength);
+    snprintf(sshPrivateKeyFilePath, sshPrivateKeyFilePathLength, "%s/.ssh/id_rsa", userHomeDir);
 
     struct stat st;
 
@@ -52,7 +61,7 @@ int git_credential_acquire_callback(git_credential **credential, const char *url
         return 0;
     }
 
-    sprintf(sshPrivateKeyFilePath, "%s/.ssh/id_ed25519", userHomeDir);
+    snprintf(sshPrivateKeyFilePath, sshPrivateKeyFilePathLength, "%s/.ssh/id_ed25519", userHomeDir);
 
     if ((stat(sshPrivateKeyFilePath, &st) == 0) && S_ISREG(st.st_mode)) {
         git_credential_ssh_key_new(credential, username_from_url, NULL, sshPrivateKeyFilePath, NULL);
@@ -63,7 +72,7 @@ int git_credential_acquire_callback(git_credential **credential, const char *url
 }
 
 // https://libgit2.org/docs/guides/101-samples/
-int do_git_clone(const char * url, const char * filepath) {
+int do_git_clone(const char * url, const char * filepath, const char * checkoutBranch, bool bare) {
     git_libgit2_init();
 
     ProgressPayload progressPayload = {0};
@@ -83,7 +92,11 @@ int do_git_clone(const char * url, const char * filepath) {
 	gitCloneOptions.fetch_opts.callbacks.sideband_progress = git_transport_message_callback;
 	gitCloneOptions.fetch_opts.callbacks.transfer_progress = git_indexer_progress_callback;
 	gitCloneOptions.fetch_opts.callbacks.payload           = &progressPayload;
-    gitCloneOptions.bare = false;
+    gitCloneOptions.bare = bare;
+
+    if (checkoutBranch != NULL) {
+        gitCloneOptions.checkout_branch = checkoutBranch;
+    }
 
     printf("Cloning into '%s'...\n", filepath);
 
@@ -91,8 +104,11 @@ int do_git_clone(const char * url, const char * filepath) {
     int resultCode = git_clone(&gitRepo, url, filepath, &gitCloneOptions);
 
     if (resultCode != 0) {
-        const git_error * error = git_error_last();
-        fprintf(stderr, "%s\n", error->message);
+        const git_error * gitError = git_error_last();
+
+        if (gitError != NULL) {
+            fprintf(stderr, "%s\n", gitError->message);
+        }
     }
 
     git_repository_free(gitRepo);
@@ -104,8 +120,29 @@ int do_git_clone(const char * url, const char * filepath) {
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
-        printf("%s <URL> <PATH>\n", argv[0]);
+        printf("%s <URL> <PATH> [--bare | -b branchName | --branch branchName]\n", argv[0]);
         return 0;
     }
-    return do_git_clone(argv[1], argv[2]);
+
+    char * branchName = NULL;
+    bool bare = false;
+
+    for (int i = 3; i < argc; i++) {
+        if (strcmp(argv[i], "--bare") == 0) {
+            bare = true;
+        } else if (strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "--branch") == 0) {
+            i++;
+            branchName = argv[i];
+
+            if (branchName == NULL) {
+                fprintf(stderr, "-b or --branch option must have value");
+                return 1;
+            }
+        } else {
+            fprintf(stderr, "unrecognized option: %s", argv[i]);
+            return 2;
+        }
+    }
+
+    return do_git_clone(argv[1], argv[2], branchName, bare);
 }

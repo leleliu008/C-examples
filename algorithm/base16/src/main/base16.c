@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <base16.h>
 
 static void help(int exitCode) {
@@ -37,65 +38,113 @@ int main(int argc, char *argv[]) {
         version();
     } else if (strcmp("--encode", argv[1]) == 0) {
         if (argv[2] == NULL) {
-            unsigned char inputBuff[100];
+            unsigned char inputBuff[1024];
             size_t        inputSize;
 
-            while ((inputSize = fread(inputBuff, 1, 100, stdin)) != 0) {
-                size_t outputLength = (inputSize << 1) + 1;
-                char   output[outputLength];
-                memset(output, 0, outputLength);
+            for (;;) {
+                inputSize = fread(inputBuff, 1, 1024, stdin);
 
-                if (base16_encode(output, inputBuff, inputSize, true) == 0) {
-                    printf("%s", output);
-                } else {
+                if (ferror(stdin)) {
                     return 1;
                 }
-            }
-            printf("\n");
-        } else if (strcmp(argv[2], "") == 0) {
-            fprintf(stderr, "base16 --encode <STR>, <STR> must not be empty string.");
-            return 1;
-        } else {
-            size_t inputLength = strlen(argv[2]);
-            size_t outputLength = (inputLength << 1) + 1;
-            char output[outputLength];
-            memset(output, 0, outputLength);
 
-            if (base16_encode(output, (unsigned char *)argv[2], inputLength, true) == 0) {
-                printf("%s\n", output);
-            } else {
+                size_t outputSize = inputSize << 1;
+                char   outputBuff[outputSize];
+
+                int ret = base16_encode(outputBuff, inputBuff, inputSize, true);
+
+                if (ret == 0) {
+                    if (fwrite(outputBuff, 1, outputSize, stdout) != outputSize || ferror(stdout)) {
+                        return 1;
+                    }
+                } else {
+                    return ret;
+                }
+
+                if (feof(stdin)) {
+                    if (isatty(STDOUT_FILENO)) {
+                        printf("\n");
+                    }
+
+                    return 0;
+                }
+            }
+        } else {
+            size_t inputSize = strlen(argv[2]);
+
+            if (inputSize == 0) {
+                fprintf(stderr, "base16 --encode <STR>, <STR> should be a non-empty string.");
                 return 1;
+            }
+
+            size_t outputSize = inputSize << 1;
+            char   outputBuff[outputSize];
+
+            int ret = base16_encode(outputBuff, (unsigned char *)argv[2], inputSize, true);
+
+            if (ret == 0) {
+                if (fwrite(outputBuff, 1, outputSize, stdout) != outputSize || ferror(stdout)) {
+                    return 1;
+                }
+
+                if (isatty(STDOUT_FILENO)) {
+                    printf("\n");
+                }
+            } else {
+                return ret;
             }
         }
     } else if (strcmp("--decode", argv[1]) == 0) {
         if (argv[2] == NULL) {
-            char   inputBuff[100];
+            char   inputBuff[1024];
             size_t inputSize;
 
-            while ((inputSize = fread(inputBuff, 1, 100, stdin)) != 0) {
-                size_t outputLength = inputSize >> 1;
-                char   output[outputLength];
-                memset(output, 0, outputLength);
+            for (;;) {
+                inputSize = fread(inputBuff, 1, 1024, stdin);
 
-                if (base16_decode((unsigned char*)output, inputBuff, inputSize) == 0) {
-                    fwrite(output, 1, outputLength, stdout);
-                    fflush(stdout);
-                } else {
+                if (ferror(stdin)) {
                     return 1;
+                }
+
+                size_t        outputSize = inputSize >> 1;
+                unsigned char outputBuff[outputSize];
+
+                int ret = base16_decode(outputBuff, inputBuff, inputSize);
+
+                if (ret == 0) {
+                    if (fwrite(outputBuff, 1, outputSize, stdout) != outputSize || ferror(stdout)) {
+                        return 1;
+                    }
+                } else {
+                    return ret;
+                }
+
+                if (feof(stdin)) {
+                    if (isatty(STDOUT_FILENO)) {
+                        printf("\n");
+                    }
+
+                    return 0;
                 }
             }
         } else {
-            size_t inputLength = strlen(argv[2]);
-            size_t outputLength = inputLength >> 1;
-            unsigned char bytes[outputLength];
-            memset(bytes, 0, outputLength);
+            size_t inputSize = strlen(argv[2]);
 
-            if (base16_decode(bytes, argv[2], inputLength) == 0) {
-                printf("%s\n", (char*)bytes);
-                fwrite(bytes, 1, outputLength, stdout);
-                fflush(stdout);
+            size_t        outputSize = inputSize >> 1;
+            unsigned char outputBuff[outputSize];
+
+            int ret = base16_decode(outputBuff, argv[2], inputSize);
+
+            if (ret == 0) {
+                if (fwrite(outputBuff, 1, outputSize, stdout) != outputSize || ferror(stdout)) {
+                    return 1;
+                }
+
+                if (isatty(STDOUT_FILENO)) {
+                    printf("\n");
+                }
             } else {
-                return 1;
+                return ret;
             }
         }
     } else {

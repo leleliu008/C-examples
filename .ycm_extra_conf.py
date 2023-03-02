@@ -97,6 +97,8 @@ flags = [
 '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include',
 '-isystem',
 '/usr/local/opt/android-sdk/ndk-bundle/sysroot/usr/include',
+'-isystem',
+'/home/leleliu008/.vcpkg/root/installed/x64-linux/include',
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
