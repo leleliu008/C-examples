@@ -365,6 +365,8 @@ int sysinfo_vers(char * buf, size_t bufSize) {
             }
         }
     }
+
+    return -1;
 #else
     const char * filepath = "/etc/os-release";
     struct stat sb;
