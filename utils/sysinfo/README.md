@@ -11,8 +11,8 @@ a C library and command-line tool to get your system's information.
 |`sysinfo type`|`windows` `macos` `ios` `tvos` `watchos` `freebsd` `netbsd` `openbsd` `linux` `android`|
 |`sysinfo code`|`windows` `macos` `ios` `tvos` `watchos` `freebsd` `netbsd` `openbsd` `android` `debian` `ubuntu` `centos` `fedora` `arch` `manjaro` `gentoo` `apline` `void`|
 |`sysinfo name`|`Windows` `macOS` `iOS` `tvOS` `watchOS` `FreeBSD` `NetBSD` `OpenBSD` `Android` `Debian` `Ubuntu` `CentOS` `Fedora`|
-|`sysinfo vers`|show version of current sysinfo|
-|`sysinfo arch`|`x86_64` `amd64` `aarch64` `s390x` `ppc64le`|
+|`sysinfo vers`|show version of your system.|
+|`sysinfo arch`|`x86_64` `amd64` `arm64` `aarch64` `s390x` `ppc64le`|
 |`sysinfo ncpu`|show the number of cpu cores of current host system.|
 |`sysinfo libc`|`glibc` `musl`|
 
@@ -40,4 +40,4 @@ a C library and command-line tool to get your system's information.
 |`windows`|`windows`|`windows`|[Windows](https://www.micrsysinfooft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[msys2](https://www.msys2.org/)|[pacman](https://www.msys2.org/docs/package-management/)|
 |`windows`|`windows`|`windows`|[Windows](https://www.micrsysinfooft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[mingw32](https://www.msys2.org/)|[pacman](https://www.msys2.org/docs/package-management/)|
 |`windows`|`windows`|`windows`|[Windows](https://www.micrsysinfooft.com/en-us/windows)||[Chocolatey](https://chocolatey.org/)|[mingw64](https://www.msys2.org/)|[pacman](https://www.msys2.org/docs/package-management/)|
-|`android`|`android`|`android`|[Andriod](https://www.android.com/)|`bionic`||[termux](https://termux.com/)|[pkg](https://wiki.termux.com/wiki/Package_Management)|
+|`android`|`android`|`android`|[Andriod](https://www.android.com/)|||[termux](https://termux.com/)|[pkg](https://wiki.termux.com/wiki/Package_Management)|
