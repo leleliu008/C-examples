@@ -78,6 +78,8 @@ flags = [
 '-I',
 './algorithm/chinese-calendar/src/lib',
 '-I',
+'./utils/sysinfo/src/lib',
+'-I',
 './thirdpart/include',
 '-I',
 './library/mbedTLS/base64/src/include',
