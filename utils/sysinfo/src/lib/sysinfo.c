@@ -308,7 +308,7 @@ int sysinfo_vers(char * buf, size_t bufSize) {
 
             regmatch_t regmatch[2];
 
-            if (regexec(&regex, content, 2, regmatch, 0) != 0) {
+            if (regexec(&regex, line, 2, regmatch, 0) != 0) {
                 regfree(&regex);
                 continue;
             }
@@ -339,7 +339,7 @@ int sysinfo_vers(char * buf, size_t bufSize) {
 
                 regmatch_t regmatch[2];
 
-                if (regexec(&regex, content, 2, regmatch, 0) != 0) {
+                if (regexec(&regex, line, 2, regmatch, 0) != 0) {
                     regfree(&regex);
                     fclose(file);
                     return -1;
@@ -349,7 +349,6 @@ int sysinfo_vers(char * buf, size_t bufSize) {
                 //printf("regmatch[0].rm_eo=%d\n", regmatch[0].rm_eo);
                 if (regmatch[0].rm_so >= 0 && regmatch[0].rm_eo > regmatch[0].rm_so) {
                     int n = regmatch[0].rm_eo - regmatch[0].rm_so;
-                    const char * str = &content[regmatch[0].rm_so];
 
                     strncpy(buf, line + regmatch[0].rm_so, bufSize > n ? n : bufSize);
 
