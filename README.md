@@ -23,6 +23,8 @@
 |||||
 |library|libyaml||[libyaml](http://blog.fpliu.com/it/software/development/language/C/library/libyaml)的使用案例|
 |||||
+|library|libgit2||[libgit2](http://blog.fpliu.com/it/software/development/language/C/library/libgit2)的使用案例|
+|||||
 |library|libarchive||[libarchive](http://blog.fpliu.com/it/software/development/language/C/library/libarchive)的使用案例|
 |||||
 |library|qrencode||[qrencode](http://blog.fpliu.com/it/software/qrencode)的使用案例|

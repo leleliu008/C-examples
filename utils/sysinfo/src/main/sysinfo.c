@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <sysinfo.h>
 
 #define COLOR_GREEN  "\033[0;32m"
@@ -132,7 +133,7 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "type") == 0) {
         char osType[31] = {0};
 
-        int ret = sysinfo_kind(osType, 20);
+        int ret = sysinfo_type(osType, 20);
 
         if (ret != 0) {
             perror(NULL);
@@ -144,7 +145,7 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "arch") == 0) {
         char osArch[31] = {0};
 
-        int ret = sysinfo_kind(osArch, 20);
+        int ret = sysinfo_arch(osArch, 20);
 
         if (ret != 0) {
             perror(NULL);
@@ -156,7 +157,7 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "code") == 0) {
         char osCode[31] = {0};
 
-        int ret = sysinfo_name(osCode, 20);
+        int ret = sysinfo_code(osCode, 20);
 
         if (ret != 0) {
             perror(NULL);
@@ -168,7 +169,7 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "name") == 0) {
         char osName[31] = {0};
 
-        int ret = sysinfo_kind(osName, 20);
+        int ret = sysinfo_name(osName, 20);
 
         if (ret != 0) {
             perror(NULL);
@@ -180,7 +181,7 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "vers") == 0) {
         char osVers[31] = {0};
 
-        int ret = sysinfo_kind(osVers, 20);
+        int ret = sysinfo_vers(osVers, 20);
 
         if (ret != 0) {
             perror(NULL);
@@ -190,16 +191,14 @@ int main(int argc, char *argv[]) {
         printf("%s\n", osVers);
         return 0;
     } else if (strcmp(argv[1], "ncpu") == 0) {
-        unsigned int ncpu = 0;
+        int ret = sysinfo_ncpu();
 
-        int ret = sysinfo_ncpu(&ncpu);
-
-        if (ret != 0) {
+        if (ret < 0) {
             perror(NULL);
             return ret;
         }
 
-        printf("%d\n", ncpu);
+        printf("%d\n", ret);
         return 0;
     } else if (strcmp(argv[1], "libc") == 0) {
         int ret = sysinfo_libc();
@@ -216,8 +215,14 @@ int main(int argc, char *argv[]) {
         }
 
         return 0;
+    } else if (strcmp(argv[1], "euid") == 0) {
+        printf("%d\n", geteuid());
+        return 0;
+    } else if (strcmp(argv[1], "egid") == 0) {
+        printf("%d\n", getegid());
+        return 0;
     } else {
-        fprintf(stderr, "unrecognized argument: %s", argv[1]);
+        fprintf(stderr, "unrecognized argument: %s\n", argv[1]);
         return 1;
     }
 }
