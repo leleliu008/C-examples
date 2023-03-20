@@ -14,11 +14,15 @@ set_target_properties(base64-shared PROPERTIES OUTPUT_NAME base64 CLEAN_DIRECT_O
 
 configure_file(src/lib/base64.pc.in ${CMAKE_CURRENT_SOURCE_DIR}/base64.pc @ONLY)
 
-add_executable(base64 src/main/base64.c)
-target_link_libraries(base64 base64-static)
+add_executable(base64-encode src/main/base64-encode.c)
+add_executable(base64-decode src/main/base64-decode.c)
+
+target_link_libraries(base64-encode base64-static)
+target_link_libraries(base64-decode base64-static)
 
 include(GNUInstallDirs)
-install(TARGETS base64        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS base64-encode RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS base64-decode RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS base64-static ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS base64-shared LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES   base64.pc              DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)

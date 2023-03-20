@@ -49,14 +49,22 @@ static void showHelp() {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        char   inputBuff[1024];
-        size_t inputSize;
+        char inputBuff[1024];
 
         for (;;) {
-            inputSize = fread(inputBuff, 1, 1024, stdin);
+            ssize_t inputSize = read(STDIN_FILENO, inputBuff, 1024);
 
-            if (ferror(stdin)) {
+            if (inputSize < 0) {
+                perror(NULL);
                 return 1;
+            }
+
+            if (inputSize == 0) {
+                if (isatty(STDOUT_FILENO)) {
+                    printf("\n");
+                }
+
+                return 0;
             }
 
             size_t        outputSize = inputSize >> 1;
@@ -64,20 +72,13 @@ int main(int argc, char *argv[]) {
 
             int ret = base16_decode(outputBuff, inputBuff, inputSize);
 
-            if (ret == 0) {
-                if (fwrite(outputBuff, 1, outputSize, stdout) != outputSize || ferror(stdout)) {
-                    return 1;
-                }
-            } else {
+            if (ret != 0) {
                 return ret;
             }
 
-            if (feof(stdin)) {
-                if (isatty(STDOUT_FILENO)) {
-                    printf("\n");
-                }
-
-                return 0;
+            if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+                perror(NULL);
+                return 1;
             }
         }
     }
@@ -91,25 +92,31 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "--version") == 0) {
         printf("%s\n", "1.0.0");
     } else {
-        size_t inputSize = strlen(argv[2]);
+        size_t inputSize = strlen(argv[1]);
+
+        if (inputSize == 0U) {
+            fprintf(stderr, "base16-decode <BASE16-ENCODED-STR>, <BASE16-ENCODED-STR> should be a non-empty string.");
+            return 1;
+        }
 
         size_t        outputSize = inputSize >> 1;
         unsigned char outputBuff[outputSize];
 
-        int ret = base16_decode(outputBuff, argv[2], inputSize);
+        int ret = base16_decode(outputBuff, argv[1], inputSize);
 
-        if (ret == 0) {
-            if (fwrite(outputBuff, 1, outputSize, stdout) != outputSize || ferror(stdout)) {
-                return 1;
-            }
-
-            if (isatty(STDOUT_FILENO)) {
-                printf("\n");
-            }
-
-            return 0;
-        } else {
+        if (ret != 0) {
             return ret;
         }
+
+        if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+            perror(NULL);
+            return 1;
+        }
+
+        if (isatty(STDOUT_FILENO)) {
+            printf("\n");
+        }
+
+        return 0;
     }
 }
