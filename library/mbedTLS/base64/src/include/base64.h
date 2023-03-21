@@ -7,7 +7,7 @@
         extern "C" {
     #endif
             /* 获取base64编码成功后的字节数 */
-            int get_base64_encode_output_length_in_bytes(size_t inputBufferSizeInBytes);
+            size_t get_base64_encode_output_length_in_bytes(size_t inputBufferSizeInBytes);
 
             /* base64编码
              * outputBuffer             base64编码后的字符串存放缓存区

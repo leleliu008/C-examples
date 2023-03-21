@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 #include <base64.h>
@@ -21,11 +22,11 @@ static void showHelp() {
         COLOR_OFF
         "    show version of this command.\n\n"
         COLOR_GREEN
-        "base64-encode <STR>\n"
+        "base64-encode [--no-wrap] <STR>\n"
         COLOR_OFF
         "    encode <STR> using base64 algorithm.\n\n"
         COLOR_GREEN
-        "base64-encode < /bin/gmake\n"
+        "base64-encode [--no-wrap] < /bin/gmake\n"
         COLOR_OFF
         "    encode data using base64 algorithm.\n";
 
@@ -39,84 +40,114 @@ static void showHelp() {
             "base64-encode --version\n"
             "base64-encode -V\n"
             "    show version of this command.\n\n"
-            "base64-encode <STR>\n"
+            "base64-encode [--no-wrap] <STR>\n"
             "    encode <STR> using base64 algorithm.\n\n"
-            "base64-encode < /bin/gmake\n"
+            "base64-encode [--no-wrap] < /bin/gmake\n"
             "    encode data using base64 algorithm.\n"
         );
     }
 }
 
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        unsigned char inputBuff[1024];
+static int base64_encode_stream(bool wrap) {
+    unsigned char inputBuff[1023];
 
-        for (;;) {
-            ssize_t inputSize = read(STDIN_FILENO, inputBuff, 1024);
+    for (;;) {
+        ssize_t inputSize = read(STDIN_FILENO, inputBuff, 1023);
 
-            if (inputSize < 0) {
-                perror(NULL);
-                return 1;
-            }
-
-            if (inputSize == 0) {
-                if (isatty(STDOUT_FILENO)) {
-                    printf("\n");
-                }
-
-                return 0;
-            }
-
-            size_t outputSize = get_base64_encode_output_length_in_bytes(inputSize) + 1;
-            char   outputBuff[outputSize];
-
-            int ret = base64_encode(outputBuff, outputSize, inputBuff, inputSize);
-
-            if (ret == 0) {
-                if (write(STDOUT_FILENO, outputBuff, outputSize - 1) < 0) {
-                    perror(NULL);
-                    return 1;
-                }
-            } else {
-                return ret;
-            }
-        }
-    }
-
-           if (strcmp(argv[1], "-h") == 0) {
-        showHelp();
-    } else if (strcmp(argv[1], "--help") == 0) {
-        showHelp();
-    } else if (strcmp(argv[1], "-V") == 0) {
-        printf("%s\n", "1.0.0");
-    } else if (strcmp(argv[1], "--version") == 0) {
-        printf("%s\n", "1.0.0");
-    } else {
-        size_t inputSize = strlen(argv[1]);
-
-        if (inputSize == 0U) {
-            fprintf(stderr, "base64-encode <STR>, <STR> should be a non-empty string.");
+        if (inputSize < 0) {
+            perror(NULL);
             return 1;
         }
 
-        size_t outputSize = get_base64_encode_output_length_in_bytes(inputSize) + 1;
-        char   outputBuff[outputSize];
-
-        int ret = base64_encode(outputBuff, outputSize + 1, (unsigned char *)argv[1], inputSize);
-
-        if (ret == 0) {
-            if (write(STDOUT_FILENO, outputBuff, outputSize - 1) < 0) {
-                perror(NULL);
-                return 1;
-            }
-
-            if (isatty(STDOUT_FILENO)) {
+        if (inputSize == 0) {
+            if (wrap) {
                 printf("\n");
             }
 
             return 0;
-        } else {
+        }
+
+        size_t outputSize = get_base64_encode_output_length_in_bytes(inputSize) + 1U;
+        char   outputBuff[outputSize];
+
+        int ret = base64_encode(outputBuff, outputSize, inputBuff, inputSize);
+
+        if (ret != 0) {
             return ret;
         }
+
+        if (write(STDOUT_FILENO, outputBuff, outputSize - 1U) < 0) {
+            perror(NULL);
+            return 1;
+        }
     }
+}
+
+static int base64_encode_string(bool wrap, const char * inputString) {
+    size_t inputSize = strlen(inputString);
+
+    if (inputSize == 0U) {
+        fprintf(stderr, "base64-encode <STR>, <STR> should be a non-empty string.");
+        return 1;
+    }
+
+    size_t outputSize = get_base64_encode_output_length_in_bytes(inputSize) + 1U;
+    char   outputBuff[outputSize];
+
+    int ret = base64_encode(outputBuff, outputSize, (unsigned char *)inputString, inputSize);
+
+    if (ret != 0) {
+        return ret;
+    }
+
+    if (write(STDOUT_FILENO, outputBuff, outputSize - 1U) < 0) {
+        perror(NULL);
+        return 1;
+    }
+
+    if (wrap) {
+        printf("\n");
+    }
+
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        return base64_encode_stream(true);
+    }
+
+    if (argc == 2) {
+               if (strcmp(argv[1], "-h") == 0) {
+            showHelp();
+            return 0;
+        } else if (strcmp(argv[1], "--help") == 0) {
+            showHelp();
+            return 0;
+        } else if (strcmp(argv[1], "-V") == 0) {
+            printf("%s\n", "1.0.0");
+            return 0;
+        } else if (strcmp(argv[1], "--version") == 0) {
+            printf("%s\n", "1.0.0");
+            return 0;
+        } else if (strcmp(argv[1], "--no-wrap") == 0) {
+            return base64_encode_stream(false);
+        } else {
+            return base64_encode_string(true, argv[1]);
+        }
+    }
+
+    if (argc == 3) {
+        if (strcmp(argv[1], "--no-wrap") == 0) {
+            return base64_encode_string(false, argv[2]);
+        } else if (strcmp(argv[1], "--") == 0) {
+            return base64_encode_string(true, argv[2]);
+        } else {
+            fprintf(stderr, "unrecognized option: %s\n", argv[1]);
+            return 1;
+        }
+    }
+
+    fprintf(stderr, "too many arguments.\n");
+    return 2;
 }

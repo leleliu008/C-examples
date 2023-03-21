@@ -73,13 +73,13 @@ int main(int argc, char *argv[]) {
 
             int ret = base64_decode(outputBuff, outputBuffSize, &outputSize, inputBuff);
 
-            if (ret == 0) {
-                if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
-                    perror(NULL);
-                    return 1;
-                }
-            } else {
+            if (ret != 0) {
                 return ret;
+            }
+
+            if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+                perror(NULL);
+                return 1;
             }
         }
     }
@@ -106,19 +106,19 @@ int main(int argc, char *argv[]) {
 
         int ret = base64_decode(outputBuff, outputBuffSize, &outputSize, argv[1]);
 
-        if (ret == 0) {
-            if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
-                perror(NULL);
-                return 1;
-            }
-
-            if (isatty(STDOUT_FILENO)) {
-                printf("\n");
-            }
-
-            return 0;
-        } else {
+        if (ret != 0) {
             return ret;
         }
+
+        if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+            perror(NULL);
+            return 1;
+        }
+
+        if (isatty(STDOUT_FILENO)) {
+            printf("\n");
+        }
+
+        return 0;
     }
 }
