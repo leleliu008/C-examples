@@ -9,6 +9,10 @@ set(PROJECT_VERSION_PATCH 0)
 
 include_directories(src/include)
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
+
+find_package(PkgConfig REQUIRED)
+
 # https://cmake.org/cmake/help/latest/module/FindCURL.html
 # https://cmake.org/cmake/help/latest/module/FindOpenSSL.html
 find_package(CURL REQUIRED)
