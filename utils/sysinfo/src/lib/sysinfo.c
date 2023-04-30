@@ -8,6 +8,8 @@
 
 #if defined (__APPLE__)
 #include <regex.h>
+#elif defined (__ANDROID__)
+#include <sys/system_properties.h>
 #endif
 
 int sysinfo_kind(char * buf, size_t bufSize) {
@@ -16,6 +18,9 @@ int sysinfo_kind(char * buf, size_t bufSize) {
     return 0;
 #elif defined (__APPLE__)
     strncpy(buf, "darwin",  (bufSize > 6U) ? 6U : bufSize);
+    return 0;
+#elif defined (__DragonFly__)
+    strncpy(buf, "dragonflybsd", (bufSize > 12U) ? 12U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
     strncpy(buf, "freebsd", (bufSize > 7U) ? 7U : bufSize);
@@ -60,6 +65,9 @@ int sysinfo_type(char * buf, size_t bufSize) {
     return 0;
 #elif defined (__APPLE__)
     strncpy(buf, "macos",   (bufSize > 5U) ? 5U : bufSize);
+    return 0;
+#elif defined (__DragonFly__)
+    strncpy(buf, "dragonflybsd", (bufSize > 12U) ? 12U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
     strncpy(buf, "freebsd", (bufSize > 7U) ? 7U : bufSize);
@@ -118,6 +126,9 @@ int sysinfo_code(char * buf, size_t bufSize) {
     return 0;
 #elif defined (__APPLE__)
     strncpy(buf, "macos",   (bufSize > 5U) ? 5U : bufSize);
+    return 0;
+#elif defined (__DragonFly__)
+    strncpy(buf, "dragonflybsd", (bufSize > 12U) ? 12U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
     strncpy(buf, "freebsd", (bufSize > 7U) ? 7U : bufSize);
@@ -192,6 +203,9 @@ int sysinfo_name(char * buf, size_t bufSize) {
     return 0;
 #elif defined (__APPLE__)
     strncpy(buf, "macOS",   (bufSize > 5U) ? 5U : bufSize);
+    return 0;
+#elif defined (__DragonFly__)
+    strncpy(buf, "DragonFlyBSD", (bufSize > 12U) ? 12U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
     strncpy(buf, "FreeBSD", (bufSize > 7U) ? 7U : bufSize);
@@ -273,6 +287,17 @@ int sysinfo_vers(char * buf, size_t bufSize) {
     strncpy(buf, uts.release, (bufSize > n) ? n : bufSize);
 
     return 0;
+#elif defined (__ANDROID__)
+    char buff[PROP_VALUE_MAX];
+
+    int n = __system_property_get("ro.build.version.release", buff);
+
+    if (n > 0) {
+        strncpy(buf, buff, (bufSize > n) ? n : bufSize);
+        return 0;
+    } else {
+        return -1;
+    }
 #elif defined (__APPLE__)
     const char * filepath = "/System/Library/CoreServices/SystemVersion.plist";
     struct stat sb;
@@ -424,6 +449,9 @@ int sysinfo_vers(char * buf, size_t bufSize) {
 }
 
 int sysinfo_libc() {
+#if defined (__ANDROID__)
+    return 3;
+#else
     struct utsname uts;
 
     if (uname(&uts) < 0) {
@@ -473,6 +501,7 @@ int sysinfo_libc() {
     }
 
     return 0;
+#endif
 }
 
 int sysinfo_ncpu() {
@@ -655,6 +684,7 @@ void sysinfo_dump(SysInfo sysinfo) {
     switch(sysinfo.libc) {
         case 1:  printf("sysinfo.libc: glibc\n"); break;
         case 2:  printf("sysinfo.libc: musl\n");  break;
+        case 3:  printf("sysinfo.libc: bonic\n"); break;
         default: printf("sysinfo.libc: \n");
     }
 }
