@@ -57,7 +57,6 @@ cmake \
     -S . \
     -B build.d \
     -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
-    -DCMAKE_C_FLAGS="-fsanitize=undefined -fsanitize=address -fsanitize=leak"
     -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_BUILD_TYPE=Debug \
     -DENABLE_TESTING=ON
