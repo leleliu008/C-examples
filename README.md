@@ -67,7 +67,7 @@ cmake \
 cmake --build build.d
 ```
 
-**step5. 运行单元测试程序**
+**step5. 运行单元测试**
 ```bash
 ctest --test-dir build.d/algorithm/base16
 ```
