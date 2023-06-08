@@ -1,5 +1,6 @@
-#include <git2.h>
 #include <stdio.h>
+
+#include <git2.h>
 
 // https://libgit2.org/docs/guides/101-samples/
 int do_git_clone(const char * url, const char * filepath) {

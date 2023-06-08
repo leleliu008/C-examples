@@ -1,8 +1,9 @@
-#include <git2.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
+
+#include <git2.h>
 
 int do_git_config_list(const char * level) {
     git_libgit2_init();
@@ -12,10 +13,8 @@ int do_git_config_list(const char * level) {
     git_config          * gitConfig         = NULL;
     const git_error     * gitError          = NULL;
 
-    int resultCode = GIT_OK;
-
     // https://libgit2.org/libgit2/#HEAD/group/config/git_config_open_default
-    resultCode = git_config_open_default(&gitConfig);
+    int resultCode = git_config_open_default(&gitConfig);
 
     if (resultCode != GIT_OK) {
         gitError = git_error_last();
@@ -53,7 +52,7 @@ clean:
     }
 
     git_config_iterator_free(gitConfigIterator);
-    //git_config_entry_free(gitConfigEntry);
+    git_config_free(gitConfig);
 
     git_libgit2_shutdown();
 
@@ -61,7 +60,7 @@ clean:
 }
 
 static void show_help_then_exit(int exitCode) {
-    const char *helpStr = "Usage: git-config-list <system|global|local>\n";
+    const char * const helpStr = "Usage: git-config-list <system|global|local>\n";
 
     if (exitCode == 0) {
         fprintf(stdout, "%s", helpStr);

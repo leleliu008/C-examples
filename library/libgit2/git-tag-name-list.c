@@ -1,9 +1,14 @@
-#include <git2.h>
 #include <stdio.h>
 #include <string.h>
 
+#include <git2.h>
+
 int do_git_tag_name_list(const char * repositoryDIR) {
-    if ((repositoryDIR == NULL) || (strcmp(repositoryDIR, "") == 0)) {
+    if (repositoryDIR == NULL) {
+        repositoryDIR = ".";
+    }
+
+    if (repositoryDIR[0] == '\0') {
         repositoryDIR = ".";
     }
 
@@ -12,9 +17,8 @@ int do_git_tag_name_list(const char * repositoryDIR) {
     git_repository * gitRepo   = NULL;
     const git_error* gitError  = NULL;
 
-    int resultCode = GIT_OK;
-
-    resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
+    // https://libgit2.org/libgit2/#HEAD/group/clone/git_repository_open_ext
+    int resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
 
     if (resultCode != GIT_OK) {
         gitError = git_error_last();
@@ -34,6 +38,8 @@ int do_git_tag_name_list(const char * repositoryDIR) {
         printf("%s\n", gitTagNames.strings[i]);
     }
 
+    git_strarray_free(&gitTagNames);
+
 clean:
     if (resultCode != GIT_OK) {
         fprintf(stderr, "%s\n", gitError->message);
@@ -47,12 +53,12 @@ clean:
 }
 
 static void show_help_then_exit(int exitCode) {
-    const char *helpStr = "Usage: git-tag-name-list [repositoryDIR]\n";
+    const char * const helpStr = "Usage: git-tag-name-list [repositoryDIR]";
 
     if (exitCode == 0) {
-        fprintf(stdout, "%s", helpStr);
+        fprintf(stdout, "%s\n", helpStr);
     } else {
-        fprintf(stderr, "%s", helpStr);
+        fprintf(stderr, "%s\n", helpStr);
     }
 
     exit(exitCode);

@@ -1,11 +1,16 @@
-#include <git2.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 
+#include <git2.h>
+
 int do_git_branch_list(const char * repositoryDIR, git_branch_t branchType) {
-    if ((repositoryDIR == NULL) || (strcmp(repositoryDIR, "") == 0)) {
+    if (repositoryDIR == NULL) {
+        repositoryDIR = ".";
+    }
+
+    if (repositoryDIR[0] == '\0') {
         repositoryDIR = ".";
     }
 
@@ -16,9 +21,8 @@ int do_git_branch_list(const char * repositoryDIR, git_branch_t branchType) {
 
     git_branch_iterator * gitBranchIterator = NULL;
 
-    int resultCode = GIT_OK;
-
-    resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
+    // https://libgit2.org/libgit2/#HEAD/group/clone/git_repository_open_ext
+    int resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
 
     if (resultCode != GIT_OK) {
         gitError = git_error_last();
@@ -33,12 +37,26 @@ int do_git_branch_list(const char * repositoryDIR, git_branch_t branchType) {
         goto clean;
     }
 
-    git_reference * gitReference = NULL;
-    git_branch_t    gitBranchType;
+    for (;;) {
+        git_reference * gitReference = NULL;
+        git_branch_t    gitBranchType;
 
-    while ((git_branch_next(&gitReference, &gitBranchType, gitBranchIterator)) == 0) {
+        // https://libgit2.org/libgit2/#HEAD/group/branch/git_branch_next
+        resultCode = git_branch_next(&gitReference, &gitBranchType, gitBranchIterator);
+
+        if (resultCode == GIT_ITEROVER) {
+            resultCode =  GIT_OK;
+            break;
+        }
+
+        if (resultCode != GIT_OK) {
+            gitError = git_error_last();
+            goto clean;
+        }
+
         const char * branchName = NULL;
 
+        // https://libgit2.org/libgit2/#HEAD/group/branch/git_branch_name
         resultCode = git_branch_name(&branchName, gitReference);
 
         if (resultCode != GIT_OK) {
@@ -46,11 +64,14 @@ int do_git_branch_list(const char * repositoryDIR, git_branch_t branchType) {
             goto clean;
         }
 
+        // https://libgit2.org/libgit2/#HEAD/group/branch/git_branch_is_head
         if (git_branch_is_head(gitReference)) {
             printf("*  %s\n", branchName);
         } else {
             printf("   %s\n", branchName);
         }
+
+        git_reference_free(gitReference);
     }
 
 clean:
@@ -58,8 +79,11 @@ clean:
         fprintf(stderr, "%s\n", gitError->message);
     }
 
-    git_repository_free(gitRepo);
     git_branch_iterator_free(gitBranchIterator);
+    git_repository_free(gitRepo);
+
+    gitBranchIterator = NULL;
+    gitRepo = NULL;
 
     git_libgit2_shutdown();
 
@@ -67,12 +91,12 @@ clean:
 }
 
 static void show_help_then_exit(int exitCode) {
-    const char *helpStr = "Usage: git-branch-list [repositoryDIR] [local|remote|all] \n";
+    const char * const helpStr = "Usage: git-branch-list [repositoryDIR] [local|remote|all]";
 
     if (exitCode == 0) {
-        fprintf(stdout, "%s", helpStr);
+        fprintf(stdout, "%s\n", helpStr);
     } else {
-        fprintf(stderr, "%s", helpStr);
+        fprintf(stderr, "%s\n", helpStr);
     }
 
     exit(exitCode);

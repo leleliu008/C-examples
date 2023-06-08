@@ -1,10 +1,12 @@
-#include <git2.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
+
+#include <git2.h>
 
 typedef struct {
     git_indexer_progress indexerProgress;
@@ -44,19 +46,19 @@ void git_checkout_progress_callback(const char *path, size_t completed_steps, si
 // https://libgit2.org/libgit2/#HEAD/group/credential/git_credential_ssh_key_new
 // https://libgit2.org/libgit2/#HEAD/group/callback/git_credential_acquire_cb
 int git_credential_acquire_callback(git_credential **credential, const char *url, const char *username_from_url, unsigned int allowed_types, void *payload) {
-    const char * userHomeDir = getenv("HOME");
+    const char * const userHomeDir = getenv("HOME");
 
     if (userHomeDir == NULL) {
         return 1;
     }
 
-    int userHomeDirLength = strlen(userHomeDir);
+    size_t userHomeDirLength = strlen(userHomeDir);
 
-    if (userHomeDir == NULL) {
+    if (userHomeDirLength == 0U) {
         return 1;
     }
 
-    size_t  sshPrivateKeyFilePathLength = userHomeDirLength + 20;
+    size_t  sshPrivateKeyFilePathLength = userHomeDirLength + 20U;
     char    sshPrivateKeyFilePath[sshPrivateKeyFilePathLength];
     memset( sshPrivateKeyFilePath, 0, sshPrivateKeyFilePathLength);
     snprintf(sshPrivateKeyFilePath, sshPrivateKeyFilePathLength, "%s/.ssh/id_rsa", userHomeDir);
@@ -101,6 +103,7 @@ int do_git_signature_now(git_repository * gitRepo, git_signature ** gitSignature
 
     userName = gitConfigEntry->value;
 
+    // https://libgit2.org/libgit2/#HEAD/group/config/git_config_get_entry
     resultCode = git_config_get_entry(&gitConfigEntry, gitConfig, "user.email");
 
     if (resultCode != GIT_OK) {
@@ -123,12 +126,10 @@ clean:
 }
 
 int create_tracking_reference(git_repository * gitRepo, const char * localeTrackingBranchNameFull, const char * remoteTrackingBranchNameFull) {
-    int resultCode = GIT_OK;
-
     git_reference * localeTrackingBranchRef = NULL;
     git_oid         trackingBranchOid = {0};
 
-    resultCode = git_reference_name_to_id(&trackingBranchOid, gitRepo, remoteTrackingBranchNameFull);
+    int resultCode = git_reference_name_to_id(&trackingBranchOid, gitRepo, remoteTrackingBranchNameFull);
 
     if (resultCode != GIT_OK) {
         goto clean;
@@ -146,31 +147,37 @@ clean:
     return resultCode;
 }
 
-int check_if_is_a_empty_dir(const char * dirpath, bool * value) {
-    DIR           * dir;
-    struct dirent * dir_entry;
-
-    dir = opendir(dirpath);
+int check_if_is_a_empty_dir(const char * dirpath) {
+    DIR * dir = opendir(dirpath);
 
     if (dir == NULL) {
-        perror(dirpath);
-        return 1;
+        return -1;
     }
 
-    while ((dir_entry = readdir(dir))) {
-        //puts(dir_entry->d_name);
+    for (;;) {
+        errno = 0;
+
+        struct dirent * dir_entry = readdir(dir);
+
+        if (dir_entry == NULL) {
+            if (errno == 0) {
+                closedir(dir);
+                return 1;
+            } else {
+                int ret = errno;
+                closedir(dir);
+                errno = ret;
+                return -1;
+            }
+        }
+
         if ((strcmp(dir_entry->d_name, ".") == 0) || (strcmp(dir_entry->d_name, "..") == 0)) {
             continue;
         }
 
-        (*value) = false;
         closedir(dir);
         return 0;
     }
-
-    (*value) = true;
-    closedir(dir);
-    return 0;
 }
 
 #define SYNC_MODE_CLONE 1
@@ -189,11 +196,14 @@ int do_git_sync(const char * repositoryDIR, const char * remoteName, const char 
 
     if (stat(repositoryDIR, &st) == 0) {
         if (S_ISDIR(st.st_mode)) {
-            bool isAEmptyDir = false;
+            resultCode = check_if_is_a_empty_dir(repositoryDIR);
 
-            resultCode = check_if_is_a_empty_dir(repositoryDIR, &isAEmptyDir);
+            if (resultCode == -1) {
+                perror(repositoryDIR);
+                return 1;
+            }
 
-            if (isAEmptyDir) {
+            if (resultCode == 1) {
                 syncMode = SYNC_MODE_CLONE;
             } else {
                 syncMode = SYNC_MODE_PULL;

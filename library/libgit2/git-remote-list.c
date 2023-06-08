@@ -1,22 +1,27 @@
-#include <git2.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 
+#include <git2.h>
+
 int do_git_remote_list(const char * repositoryDIR) {
-    if ((repositoryDIR == NULL) || (strcmp(repositoryDIR, "") == 0)) {
+    if (repositoryDIR == NULL) {
         repositoryDIR = ".";
     }
+
+    if (repositoryDIR[0] == '\0') {
+        repositoryDIR = ".";
+    }
+
 
     git_libgit2_init();
 
     git_repository * gitRepo   = NULL;
     const git_error* gitError  = NULL;
 
-    int resultCode = GIT_OK;
-
-    resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
+    // https://libgit2.org/libgit2/#HEAD/group/clone/git_repository_open_ext
+    int resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
 
     if (resultCode != GIT_OK) {
         gitError = git_error_last();
@@ -24,6 +29,8 @@ int do_git_remote_list(const char * repositoryDIR) {
     }
 
     git_strarray stringArrayList;
+
+    // https://libgit2.org/libgit2/#HEAD/group/remote/git_remote_list
     resultCode = git_remote_list(&stringArrayList, gitRepo);
 
     if (resultCode != GIT_OK) {
@@ -31,9 +38,11 @@ int do_git_remote_list(const char * repositoryDIR) {
         goto clean;
     }
 
-    for (size_t i = 0; i < stringArrayList.count; i++) {
+    for (size_t i = 0U; i < stringArrayList.count; i++) {
         printf("%s\n", stringArrayList.strings[i]);
     }
+
+    git_strarray_free(&stringArrayList);
 
 clean:
     if (resultCode != GIT_OK) {
@@ -48,12 +57,12 @@ clean:
 }
 
 static void show_help_then_exit(int exitCode) {
-    const char *helpStr = "Usage: git-fetch [repositoryDIR]\n";
+    const char * const helpStr = "Usage: git-fetch [repositoryDIR]";
 
     if (exitCode == 0) {
-        fprintf(stdout, "%s", helpStr);
+        fprintf(stdout, "%s\n", helpStr);
     } else {
-        fprintf(stderr, "%s", helpStr);
+        fprintf(stderr, "%s\n", helpStr);
     }
 
     exit(exitCode);

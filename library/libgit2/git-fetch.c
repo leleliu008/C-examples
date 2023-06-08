@@ -27,26 +27,32 @@ int git_indexer_progress_callback(const git_indexer_progress *stats, void *paylo
 // https://libgit2.org/libgit2/#HEAD/group/credential/git_credential_ssh_key_new
 // https://libgit2.org/libgit2/#HEAD/group/callback/git_credential_acquire_cb
 int git_credential_acquire_callback(git_credential **credential, const char *url, const char *username_from_url, unsigned int allowed_types, void *payload) {
-    const char * userHomeDir = getenv("HOME");
-    int userHomeDirLength = strlen(userHomeDir);
+    const char * const userHomeDir = getenv("HOME");
 
-    int length = userHomeDirLength + 20;
-    char sshPrivateKeyFilePath[length];
-    memset(sshPrivateKeyFilePath, 0, length);
+    if (userHomeDir == NULL) {
+        return 1;
+    }
+
+    size_t userHomeDirLength = strlen(userHomeDir);
+
+    if (userHomeDirLength == 0U) {
+        return 1;
+    }
+
+    size_t  length = userHomeDirLength + 20U;
+    char    sshPrivateKeyFilePath[length];
     sprintf(sshPrivateKeyFilePath, "%s/.ssh/id_rsa", userHomeDir);
 
     struct stat st;
 
     if ((stat(sshPrivateKeyFilePath, &st) == 0) && S_ISREG(st.st_mode)) {
-        git_credential_ssh_key_new(credential, username_from_url, NULL, sshPrivateKeyFilePath, NULL);
-        return 0;
+        return git_credential_ssh_key_new(credential, username_from_url, NULL, sshPrivateKeyFilePath, NULL);
     }
 
     sprintf(sshPrivateKeyFilePath, "%s/.ssh/id_ed25519", userHomeDir);
 
     if ((stat(sshPrivateKeyFilePath, &st) == 0) && S_ISREG(st.st_mode)) {
-        git_credential_ssh_key_new(credential, username_from_url, NULL, sshPrivateKeyFilePath, NULL);
-        return 0;
+        return git_credential_ssh_key_new(credential, username_from_url, NULL, sshPrivateKeyFilePath, NULL);
     }
 
     return 1;
@@ -123,7 +129,7 @@ clean:
 }
 
 static void show_help_then_exit(int exitCode) {
-    const char *helpStr = "Usage: git-fetch [repositoryDIR] [remoteName] [refspec]]\n";
+    const char * const helpStr = "Usage: git-fetch [repositoryDIR] [remoteName] [refspec]]\n";
 
     if (exitCode == 0) {
         fprintf(stdout, "%s", helpStr);

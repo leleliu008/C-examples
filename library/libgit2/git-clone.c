@@ -1,9 +1,10 @@
-#include <git2.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <sys/stat.h>
+
+#include <git2.h>
 
 typedef struct {
     git_indexer_progress indexerProgress;
@@ -37,19 +38,19 @@ void git_checkout_progress_callback(const char *path, size_t completed_steps, si
 // https://libgit2.org/libgit2/#HEAD/group/credential/git_credential_ssh_key_new
 // https://libgit2.org/libgit2/#HEAD/group/callback/git_credential_acquire_cb
 int git_credential_acquire_callback(git_credential **credential, const char *url, const char *username_from_url, unsigned int allowed_types, void *payload) {
-    const char * userHomeDir = getenv("HOME");
+    const char * const userHomeDir = getenv("HOME");
 
     if (userHomeDir == NULL) {
         return 1;
     }
 
-    int userHomeDirLength = strlen(userHomeDir);
+    size_t userHomeDirLength = strlen(userHomeDir);
 
-    if (userHomeDirLength == 0) {
+    if (userHomeDirLength == 0U) {
         return 1;
     }
 
-    size_t  sshPrivateKeyFilePathLength = userHomeDirLength + 20;
+    size_t  sshPrivateKeyFilePathLength = userHomeDirLength + 20U;
     char    sshPrivateKeyFilePath[sshPrivateKeyFilePathLength];
     memset( sshPrivateKeyFilePath, 0, sshPrivateKeyFilePathLength);
     snprintf(sshPrivateKeyFilePath, sshPrivateKeyFilePathLength, "%s/.ssh/id_rsa", userHomeDir);
@@ -103,7 +104,7 @@ int do_git_clone(const char * url, const char * filepath, const char * checkoutB
     // https://libgit2.org/libgit2/#HEAD/group/clone/git_clone
     int resultCode = git_clone(&gitRepo, url, filepath, &gitCloneOptions);
 
-    if (resultCode != 0) {
+    if (resultCode != GIT_OK) {
         const git_error * gitError = git_error_last();
 
         if (gitError != NULL) {

@@ -1,11 +1,24 @@
-#include <git2.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 
+#include <git2.h>
+
 int do_git_rev_parse(const char * repositoryDIR, const char * ref, bool shortOutput) {
-    if ((repositoryDIR == NULL) || (strcmp(repositoryDIR, "") == 0)) {
+    if (repositoryDIR == NULL) {
         repositoryDIR = ".";
+    }
+
+    if (repositoryDIR[0] == '\0') {
+        repositoryDIR = ".";
+    }
+
+    if (ref == NULL) {
+        return 1;
+    }
+
+    if (ref[0] == '\0') {
+        return 2;
     }
 
     git_libgit2_init();
@@ -17,26 +30,22 @@ int do_git_rev_parse(const char * repositoryDIR, const char * ref, bool shortOut
 
     char sha1sum[41] = {0};
 
-    size_t i, j;
-
+    // https://libgit2.org/libgit2/#HEAD/group/clone/git_repository_open_ext
     int resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
 
     if (resultCode != GIT_OK) {
         goto clean;
     }
 
-    if (ref == NULL || strcmp(ref, "") == 0) {
-        goto clean;
-    }
-
+    // https://libgit2.org/libgit2/#HEAD/group/reference/git_reference_name_to_id
     resultCode = git_reference_name_to_id(&gitOid, gitRepo, ref);
 
     if (resultCode != GIT_OK) {
         goto clean;
     }
 
-    for (i = 0; i < 20; i++) {
-        j = 2 * i;
+    for (int i = 0; i < 20; i++) {
+        int j = i << 1;
         sprintf(&sha1sum[j], "%02x", (unsigned int)(gitOid.id[i]));
     }
 

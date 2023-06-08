@@ -16,6 +16,7 @@ find_package(LibGit2   REQUIRED)
 ########################################################################################
 
 add_executable(git-open          git-open.c)
+add_executable(git-init          git-init.c)
 add_executable(git-sync          git-sync.c)
 add_executable(git-pull          git-pull.c)
 add_executable(git-fetch         git-fetch.c)
@@ -29,6 +30,7 @@ add_executable(git-config-list   git-config-list.c)
 add_executable(git-tag-name-list git-tag-name-list.c)
 
 target_link_libraries(git-open          LIBGIT2::LIBGIT2)
+target_link_libraries(git-init          LIBGIT2::LIBGIT2)
 target_link_libraries(git-sync          LIBGIT2::LIBGIT2)
 target_link_libraries(git-pull          LIBGIT2::LIBGIT2)
 target_link_libraries(git-fetch         LIBGIT2::LIBGIT2)
@@ -45,4 +47,4 @@ target_link_libraries(git-tag-name-list LIBGIT2::LIBGIT2)
 
 include(GNUInstallDirs)
 
-install(TARGETS git-open git-pull git-sync git-fetch git-clone git-rev-parse git-clone-simple git-status-list git-remote-list git-branch-list git-config-list git-tag-name-list RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS git-open git-init git-pull git-sync git-fetch git-clone git-rev-parse git-clone-simple git-status-list git-remote-list git-branch-list git-config-list git-tag-name-list RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -1,24 +1,28 @@
-#include <git2.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 
+#include <git2.h>
+
 int do_git_status_list(const char * repositoryDIR) {
-    if ((repositoryDIR == NULL) || (strcmp(repositoryDIR, "") == 0)) {
+    if (repositoryDIR == NULL) {
+        repositoryDIR = ".";
+    }
+
+    if (repositoryDIR[0] == '\0') {
         repositoryDIR = ".";
     }
 
     git_libgit2_init();
 
-    git_repository * gitRepo   = NULL;
-    const git_error* gitError  = NULL;
+    git_repository  * gitRepo   = NULL;
+    const git_error * gitError  = NULL;
 
-    git_status_list* gitStatusList = NULL;
+    git_status_list * gitStatusList = NULL;
 
-    int resultCode = GIT_OK;
-
-    resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
+    // https://libgit2.org/libgit2/#HEAD/group/clone/git_repository_open_ext
+    int resultCode = git_repository_open_ext(&gitRepo, repositoryDIR, GIT_REPOSITORY_OPEN_NO_SEARCH, NULL);
 
     if (resultCode != GIT_OK) {
         gitError = git_error_last();
@@ -38,7 +42,7 @@ int do_git_status_list(const char * repositoryDIR) {
 
     const size_t count = git_status_list_entrycount(gitStatusList);
 
-    for (size_t i = 0; i < count; i++) {
+    for (size_t i = 0U; i < count; i++) {
         // https://libgit2.org/libgit2/#HEAD/type/git_status_entry
         const git_status_entry * gitStatusEntry = git_status_byindex(gitStatusList, i);
 
@@ -65,12 +69,12 @@ clean:
 }
 
 static void show_help_then_exit(int exitCode) {
-    const char *helpStr = "Usage: git-status-list [repositoryDIR]\n";
+    const char * const helpStr = "Usage: git-status-list [repositoryDIR]";
 
     if (exitCode == 0) {
-        fprintf(stdout, "%s", helpStr);
+        fprintf(stdout, "%s\n", helpStr);
     } else {
-        fprintf(stderr, "%s", helpStr);
+        fprintf(stderr, "%s\n", helpStr);
     }
 
     exit(exitCode);
