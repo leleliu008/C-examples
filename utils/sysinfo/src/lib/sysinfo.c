@@ -483,17 +483,27 @@ int sysinfo_libc() {
             }
         }
 
-        size_t   muslDynamicLoaderPathLength = osArchLength + 19U;
-        char     muslDynamicLoaderPath[muslDynamicLoaderPathLength];
-        snprintf(muslDynamicLoaderPath, muslDynamicLoaderPathLength, "/lib/ld-musl-%s.so.1", uts.machine);
+        size_t muslDynamicLoaderPathCapacity = osArchLength + 19U;
+        char   muslDynamicLoaderPath[muslDynamicLoaderPathCapacity];
+
+        int ret = snprintf(muslDynamicLoaderPath, muslDynamicLoaderPathCapacity, "/lib/ld-musl-%s.so.1", uts.machine);
+
+        if (ret < 0) {
+            return -1;
+        }
 
         if ((stat(muslDynamicLoaderPath, &sb) == 0) && (S_ISREG(sb.st_mode) || S_ISLNK(sb.st_mode))) {
             return 2;
         }
 
-        size_t   dynamicLoaderPathLength = osArchLength + 22U;
-        char     dynamicLoaderPath[dynamicLoaderPathLength];
-        snprintf(dynamicLoaderPath, dynamicLoaderPathLength, "/lib64/ld-linux-%s.so.2", uts.machine);
+        size_t dynamicLoaderPathCapacity = osArchLength + 22U;
+        char   dynamicLoaderPath[dynamicLoaderPathCapacity];
+
+        ret = snprintf(dynamicLoaderPath, dynamicLoaderPathCapacity, "/lib64/ld-linux-%s.so.2", uts.machine);
+
+        if (ret < 0) {
+            return -1;
+        }
 
         if ((stat(dynamicLoaderPath, &sb) == 0) && (S_ISREG(sb.st_mode) || S_ISLNK(sb.st_mode))) {
             return 1;
@@ -616,7 +626,7 @@ int sysinfo_make(SysInfo * sysinfo) {
     sysinfo->arch = strdup(osArch);
 
     if (sysinfo->arch == NULL) {
-        sysinfo_free(*sysinfo);
+        sysinfo_free(sysinfo);
         errno = ENOMEM;
         return -1;
     }
@@ -624,7 +634,7 @@ int sysinfo_make(SysInfo * sysinfo) {
     sysinfo->kind = strdup(osKind);
 
     if (sysinfo->kind == NULL) {
-        sysinfo_free(*sysinfo);
+        sysinfo_free(sysinfo);
         errno = ENOMEM;
         return -1;
     }
@@ -632,7 +642,7 @@ int sysinfo_make(SysInfo * sysinfo) {
     sysinfo->type = strdup(osType);
 
     if (sysinfo->type == NULL) {
-        sysinfo_free(*sysinfo);
+        sysinfo_free(sysinfo);
         errno = ENOMEM;
         return -1;
     }
@@ -640,7 +650,7 @@ int sysinfo_make(SysInfo * sysinfo) {
     sysinfo->code = strdup(osCode);
 
     if (sysinfo->code == NULL) {
-        sysinfo_free(*sysinfo);
+        sysinfo_free(sysinfo);
         errno = ENOMEM;
         return -1;
     }
@@ -648,7 +658,7 @@ int sysinfo_make(SysInfo * sysinfo) {
     sysinfo->name = strdup(osName);
 
     if (sysinfo->name == NULL) {
-        sysinfo_free(*sysinfo);
+        sysinfo_free(sysinfo);
         errno = ENOMEM;
         return -1;
     }
@@ -656,7 +666,7 @@ int sysinfo_make(SysInfo * sysinfo) {
     sysinfo->vers = strdup(osVers);
 
     if (sysinfo->vers == NULL) {
-        sysinfo_free(*sysinfo);
+        sysinfo_free(sysinfo);
         errno = ENOMEM;
         return -1;
     }
@@ -670,18 +680,18 @@ int sysinfo_make(SysInfo * sysinfo) {
     return 0;
 }
 
-void sysinfo_dump(SysInfo sysinfo) {
-    printf("sysinfo.ncpu: %u\n",  sysinfo.ncpu);
-    printf("sysinfo.arch: %s\n", (sysinfo.arch == NULL) ? "" : sysinfo.arch);
-    printf("sysinfo.kind: %s\n", (sysinfo.kind == NULL) ? "" : sysinfo.kind);
-    printf("sysinfo.type: %s\n", (sysinfo.type == NULL) ? "" : sysinfo.type);
-    printf("sysinfo.code: %s\n", (sysinfo.code == NULL) ? "" : sysinfo.code);
-    printf("sysinfo.name: %s\n", (sysinfo.name == NULL) ? "" : sysinfo.name);
-    printf("sysinfo.vers: %s\n", (sysinfo.vers == NULL) ? "" : sysinfo.vers);
-    printf("sysinfo.euid: %u\n",  sysinfo.euid);
-    printf("sysinfo.egid: %u\n",  sysinfo.egid);
+void sysinfo_dump(SysInfo * sysinfo) {
+    printf("sysinfo.ncpu: %u\n",  sysinfo->ncpu);
+    printf("sysinfo.arch: %s\n", (sysinfo->arch == NULL) ? "" : sysinfo->arch);
+    printf("sysinfo.kind: %s\n", (sysinfo->kind == NULL) ? "" : sysinfo->kind);
+    printf("sysinfo.type: %s\n", (sysinfo->type == NULL) ? "" : sysinfo->type);
+    printf("sysinfo.code: %s\n", (sysinfo->code == NULL) ? "" : sysinfo->code);
+    printf("sysinfo.name: %s\n", (sysinfo->name == NULL) ? "" : sysinfo->name);
+    printf("sysinfo.vers: %s\n", (sysinfo->vers == NULL) ? "" : sysinfo->vers);
+    printf("sysinfo.euid: %u\n",  sysinfo->euid);
+    printf("sysinfo.egid: %u\n",  sysinfo->egid);
 
-    switch(sysinfo.libc) {
+    switch(sysinfo->libc) {
         case 1:  printf("sysinfo.libc: glibc\n"); break;
         case 2:  printf("sysinfo.libc: musl\n");  break;
         case 3:  printf("sysinfo.libc: bonic\n"); break;
@@ -689,34 +699,34 @@ void sysinfo_dump(SysInfo sysinfo) {
     }
 }
 
-void sysinfo_free(SysInfo sysinfo) {
-    if (sysinfo.arch != NULL) {
-        free(sysinfo.arch);
-        sysinfo.arch = NULL;
+void sysinfo_free(SysInfo * sysinfo) {
+    if (sysinfo->arch != NULL) {
+        free(sysinfo->arch);
+        sysinfo->arch = NULL;
     }
 
-    if (sysinfo.kind != NULL) {
-        free(sysinfo.kind);
-        sysinfo.kind = NULL;
+    if (sysinfo->kind != NULL) {
+        free(sysinfo->kind);
+        sysinfo->kind = NULL;
     }
 
-    if (sysinfo.type != NULL) {
-        free(sysinfo.type);
-        sysinfo.type = NULL;
+    if (sysinfo->type != NULL) {
+        free(sysinfo->type);
+        sysinfo->type = NULL;
     }
 
-    if (sysinfo.code != NULL) {
-        free(sysinfo.code);
-        sysinfo.code = NULL;
+    if (sysinfo->code != NULL) {
+        free(sysinfo->code);
+        sysinfo->code = NULL;
     }
 
-    if (sysinfo.name != NULL) {
-        free(sysinfo.name);
-        sysinfo.name = NULL;
+    if (sysinfo->name != NULL) {
+        free(sysinfo->name);
+        sysinfo->name = NULL;
     }
 
-    if (sysinfo.vers != NULL) {
-        free(sysinfo.vers);
-        sysinfo.vers = NULL;
+    if (sysinfo->vers != NULL) {
+        free(sysinfo->vers);
+        sysinfo->vers = NULL;
     }
 }

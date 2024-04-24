@@ -100,8 +100,8 @@ int main(int argc, char *argv[]) {
             return ret;
         }
 
-        sysinfo_dump(sysinfo);
-        sysinfo_free(sysinfo);
+        sysinfo_dump(&sysinfo);
+        sysinfo_free(&sysinfo);
        
         return 0;
     }

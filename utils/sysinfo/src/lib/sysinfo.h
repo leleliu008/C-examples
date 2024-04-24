@@ -29,7 +29,7 @@ int  sysinfo_libc();
 int  sysinfo_ncpu();
 
 int  sysinfo_make(SysInfo * sysinfo);
-void sysinfo_dump(SysInfo sysinfo);
-void sysinfo_free(SysInfo sysinfo);
+void sysinfo_dump(SysInfo * sysinfo);
+void sysinfo_free(SysInfo * sysinfo);
 
 #endif
