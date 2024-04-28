@@ -15,7 +15,7 @@
              * inputBuffer              要编码的字节的起始指针
              * inputBufferSizeInBytes   要编码的字节的长度
              */
-            int base64_encode(char* outputBuffer, size_t outputBufferSizeInBytes, unsigned char* inputBuffer, size_t inputBufferSizeInBytes);
+            int base64_encode(char * outputBuffer, size_t outputBufferSizeInBytes, unsigned char * inputBuffer, size_t inputBufferSizeInBytes);
 
             /* base64解码
              * outputBuffer                     base64解码后的字符串存放缓存区
@@ -23,7 +23,7 @@
              * writenToOutputBufferSizeInBytes  真实的向缓存区写入了多少字节
              * input                            base64编码的字符串
              */
-            int base64_decode(unsigned char* outputBuffer, size_t outputBufferSizeInBytes, size_t* writenToOutputBufferSizeInBytes, char* input);
+            int base64_decode(unsigned char * outputBuffer, size_t outputBufferSizeInBytes, size_t * writenToOutputBufferSizeInBytes, char * inputBuffer, size_t inputBufferSizeInBytes);
 
     #ifdef __cplusplus
         }

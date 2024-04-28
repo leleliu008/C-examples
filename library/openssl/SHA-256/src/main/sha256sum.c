@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+
 #include <sha256sum.h>
 
 static void show_help(const char * programName) {
-    printf("USAGE: %s [--string STR] [--file FILE]\n", programName);
+    printf("USAGE: %s [--string <STR>] [--file <FILE>]\n", programName);
 }
 
 int main(int argc, char* argv[]) {
@@ -18,37 +18,48 @@ int main(int argc, char* argv[]) {
     } else if (strcmp(argv[1], "--help") == 0) {
         show_help(argv[0]);
     } else if (strcmp(argv[1], "--string") == 0) {
-        char * sha256sum = sha256sum_of_string(argv[2]);
-        if (sha256sum == NULL) {
-            perror("sha256sum_of_string");
-            return 1;
-        } else {
+        if (argv[2] == NULL) {
+            fprintf(stderr, "USAGE: %s --string <STR> , <STR> is unspecifed.\n", argv[0]);
+            return 0;
+        }
+
+        if (argv[2][0] == '\0') {
+            fprintf(stderr, "USAGE: %s --string <STR> , <STR> should be a non-empty string.\n", argv[0]);
+            return 0;
+        }
+
+        char sha256sum[65] = {0};
+
+        int ret = sha256sum_of_string(sha256sum, argv[2]);
+
+        if (ret == 0) {
             printf("%s\n", sha256sum);
             return 0;
+        } else {
+            perror(NULL);
+            return 1;
         }
     } else if (strcmp(argv[1], "--file") == 0) {
         if (argv[2] == NULL) {
-            printf("filepath argument is not given.\n");
-            return 1;
+            fprintf(stderr, "USAGE: %s --file <FILE> , <FILE> is unspecifed.\n", argv[0]);
+            return 0;
         }
 
-        FILE * file = fopen(argv[2], "rb");
-
-        if (file == NULL) {
-            perror(argv[2]);
-            return 1;
+        if (argv[2][0] == '\0') {
+            fprintf(stderr, "USAGE: %s --file <FILE> , <FILE> should be a non-empty string.\n", argv[0]);
+            return 0;
         }
 
-        char * sha256sum = sha256sum_of_file(file);
+        char sha256sum[65] = {0};
 
-        fclose(file);
+        int ret = sha256sum_of_file(sha256sum, argv[2]);
 
-        if (sha256sum == NULL) {
-            perror("sha256sum_of_file");
-            return 1;
-        } else {
+        if (ret == 0) {
             printf("%s  %s\n", sha256sum, argv[2]);
             return 0;
+        } else {
+            perror(argv[2]);
+            return 1;
         }
     } else {
         printf("unrecognized argument: %s\n", argv[1]);

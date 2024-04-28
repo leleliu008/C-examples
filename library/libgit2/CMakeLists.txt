@@ -28,6 +28,7 @@ add_executable(git-remote-list   git-remote-list.c)
 add_executable(git-branch-list   git-branch-list.c)
 add_executable(git-config-list   git-config-list.c)
 add_executable(git-tag-name-list git-tag-name-list.c)
+add_executable(git-submodule-update git-submodule-update.c)
 
 target_link_libraries(git-open          LIBGIT2::LIBGIT2)
 target_link_libraries(git-init          LIBGIT2::LIBGIT2)
@@ -42,9 +43,10 @@ target_link_libraries(git-remote-list   LIBGIT2::LIBGIT2)
 target_link_libraries(git-branch-list   LIBGIT2::LIBGIT2)
 target_link_libraries(git-config-list   LIBGIT2::LIBGIT2)
 target_link_libraries(git-tag-name-list LIBGIT2::LIBGIT2)
+target_link_libraries(git-submodule-update LIBGIT2::LIBGIT2)
 
 ########################################################################################
 
 include(GNUInstallDirs)
 
-install(TARGETS git-open git-init git-pull git-sync git-fetch git-clone git-rev-parse git-clone-simple git-status-list git-remote-list git-branch-list git-config-list git-tag-name-list RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS git-open git-init git-pull git-sync git-fetch git-clone git-rev-parse git-clone-simple git-status-list git-remote-list git-branch-list git-config-list git-tag-name-list git-submodule-update RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -1,5 +1,5 @@
 # sysinfo
-a C library and command-line tool to get your system's information.
+A C library and command-line tool to get your currently running system's information.
 
 ## sysinfo command usage
 |command|values|

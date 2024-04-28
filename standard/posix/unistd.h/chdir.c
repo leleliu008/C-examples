@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<string.h>
+
 #include<unistd.h>
+#include<limits.h>
 
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
@@ -8,24 +10,24 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-    const char * cwd = NULL;
+    char buff[PATH_MAX];
+    const char * cwd = getcwd(buff, PATH_MAX);
 
-    for (int length = 100; cwd == NULL; length += 100) {
-        char buff[length];
-        memset(buff, 0, length);
-        cwd = getcwd(buff, length);
+    if (cwd == NULL) {
+        perror(NULL);
+        return 1;
     }
 
     printf("current working dir is %s\n", cwd);
 	printf("change  working dir to %s\n", argv[1]);
 
 	if (chdir(argv[1]) == 0) {
-        const char * cwd = NULL;
+        char buff[PATH_MAX];
+        const char * cwd = getcwd(buff, PATH_MAX);
 
-        for (int length = 100; cwd == NULL; length += 100) {
-            char buff[length];
-            memset(buff, 0, length);
-            cwd = getcwd(buff, length);
+        if (cwd == NULL) {
+            perror(NULL);
+            return 1;
         }
 
         printf("current working dir is %s\n", cwd);

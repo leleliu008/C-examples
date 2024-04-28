@@ -1,17 +1,18 @@
 #include<stdio.h>
-#include<string.h>
+
 #include<unistd.h>
+#include<limits.h>
 
 int main(int argc, char *argv[]) {
-    const char * cwd = NULL;
+    char buff[PATH_MAX];
 
-    for (int length = 100; cwd == NULL; length += 100) {
-        char buff[length];
-        memset(buff, 0, length);
-        cwd = getcwd(buff, length);
+    const char * cwd = getcwd(buff, PATH_MAX);
+
+    if (cwd == NULL) {
+        perror(NULL);
+        return 1;
+    } else {
+        printf("current working dir is %s\n", cwd);
+        return 0;
     }
-
-    printf("current working dir is %s\n", cwd);
-
-	return 0;
 }

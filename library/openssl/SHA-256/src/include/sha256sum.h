@@ -7,9 +7,10 @@
     #ifdef __cplusplus
         extern "C" {
     #endif
-            char* sha256sum_of_bytes (unsigned char * inputBuffer, size_t inputBufferSizeInBytes);
-            char* sha256sum_of_string(const char * str);
-            char* sha256sum_of_file  (FILE * file);
+        int sha256sum_of_bytes (char outputBuffer[65], unsigned char * inputBuffer, size_t inputBufferSizeInBytes);
+        int sha256sum_of_string(char outputBuffer[65], const char * str);
+        int sha256sum_of_file  (char outputBuffer[65], const char * filepath);
+        int sha256sum_of_stream(char outputBuffer[65], FILE * file);
     #ifdef __cplusplus
         }
     #endif

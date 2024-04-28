@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
+
 #include <base64.h>
 
 #define COLOR_GREEN  "\033[0;32m"
@@ -49,17 +51,17 @@ static void showHelp() {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        char inputBuff[1024];
+        char readBuf[1024];
 
         for (;;) {
-            ssize_t inputSize = read(STDIN_FILENO, inputBuff, 1024);
+            ssize_t readSize = read(STDIN_FILENO, readBuf, 1024);
 
-            if (inputSize < 0) {
+            if (readSize == -1) {
                 perror(NULL);
                 return 1;
             }
 
-            if (inputSize == 0) {
+            if (readSize == 0) {
                 if (isatty(STDOUT_FILENO)) {
                     printf("\n");
                 }
@@ -67,18 +69,25 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
 
-            size_t        outputBuffSize = (inputSize * 3U) >> 2;
+            size_t        outputBuffSize = (readSize * 3U) >> 2;
             unsigned char outputBuff[outputBuffSize];
-            size_t        outputSize;
+            size_t        outputRealSize;
 
-            int ret = base64_decode(outputBuff, outputBuffSize, &outputSize, inputBuff);
+            int ret = base64_decode(outputBuff, outputBuffSize, &outputRealSize, readBuf, readSize);
 
             if (ret != 0) {
                 return ret;
             }
 
-            if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+            ssize_t writtenSize = write(STDOUT_FILENO, outputBuff, outputRealSize);
+
+            if (writtenSize == -1) {
                 perror(NULL);
+                return 1;
+            }
+
+            if ((size_t)writtenSize != outputRealSize) {
+                fprintf(stderr, "not fully written to stdout.\n");
                 return 1;
             }
         }
@@ -93,25 +102,32 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "--version") == 0) {
         printf("%s\n", "1.0.0");
     } else {
-        size_t inputSize = strlen(argv[1]);
-
-        if (inputSize == 0U) {
-            fprintf(stderr, "base64-encode <BASE64-ENCODED-STR>, <BASE64-ENCODED-STR> should be a non-empty string.");
+        if (argv[1][0] == '\0') {
+            fprintf(stderr, "base64-decode <BASE64-ENCODED-STR>, <BASE64-ENCODED-STR> should be a non-empty string.");
             return 1;
         }
 
+        size_t inputSize = strlen(argv[1]);
+
         size_t        outputBuffSize = (inputSize * 3U) >> 2;
         unsigned char outputBuff[outputBuffSize];
-        size_t        outputSize;
+        size_t        outputRealSize;
 
-        int ret = base64_decode(outputBuff, outputBuffSize, &outputSize, argv[1]);
+        int ret = base64_decode(outputBuff, outputBuffSize, &outputRealSize, argv[1], inputSize);
 
         if (ret != 0) {
             return ret;
         }
 
-        if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+        ssize_t writtenSize = write(STDOUT_FILENO, outputBuff, outputRealSize);
+
+        if (writtenSize == -1) {
             perror(NULL);
+            return 1;
+        }
+
+        if ((size_t)writtenSize != outputRealSize) {
+            fprintf(stderr, "not fully written to stdout.\n");
             return 1;
         }
 

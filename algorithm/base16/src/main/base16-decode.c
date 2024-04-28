@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
+
 #include <base16.h>
 
 #define COLOR_GREEN  "\033[0;32m"
@@ -49,17 +51,17 @@ static void showHelp() {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        char inputBuff[1024];
+        char readBuf[1024];
 
         for (;;) {
-            ssize_t inputSize = read(STDIN_FILENO, inputBuff, 1024);
+            ssize_t readSize = read(STDIN_FILENO, readBuf, 1024);
 
-            if (inputSize < 0) {
+            if (readSize == -1) {
                 perror(NULL);
                 return 1;
             }
 
-            if (inputSize == 0) {
+            if (readSize == 0) {
                 if (isatty(STDOUT_FILENO)) {
                     printf("\n");
                 }
@@ -67,17 +69,24 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
 
-            size_t        outputSize = inputSize >> 1;
+            size_t        outputSize = readSize >> 1;
             unsigned char outputBuff[outputSize];
 
-            int ret = base16_decode(outputBuff, inputBuff, inputSize);
+            int ret = base16_decode(outputBuff, readBuf, readSize);
 
             if (ret != 0) {
                 return ret;
             }
 
-            if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+            ssize_t writtenSize = write(STDOUT_FILENO, outputBuff, outputSize);
+
+            if (writtenSize == -1) {
                 perror(NULL);
+                return 1;
+            }
+
+            if ((size_t)writtenSize != outputSize) {
+                fprintf(stderr, "not fully written to stdout.\n");
                 return 1;
             }
         }
@@ -108,8 +117,15 @@ int main(int argc, char *argv[]) {
             return ret;
         }
 
-        if (write(STDOUT_FILENO, outputBuff, outputSize) < 0) {
+        ssize_t writtenSize = write(STDOUT_FILENO, outputBuff, outputSize);
+
+        if (writtenSize == -1) {
             perror(NULL);
+            return 1;
+        }
+
+        if ((size_t)writtenSize != outputSize) {
+            fprintf(stderr, "not fully written to stdout.\n");
             return 1;
         }
 
