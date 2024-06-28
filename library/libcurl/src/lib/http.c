@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <libgen.h>
 #include <stdbool.h>
+
+#include <unistd.h>
+#include <libgen.h>
+
 #include <curl/curl.h>
+
 #include <http.h>
 
 static size_t write_callback(void * ptr, size_t size, size_t nmemb, void * stream) {
@@ -53,6 +56,36 @@ int http_fetch(const char * url, FILE * outputFile, bool verbose, bool showProgr
     } else {
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    // https://www.openssl.org/docs/man1.1.1/man3/SSL_CTX_set_default_verify_paths.html
+    const char * const SSL_CERT_FILE = getenv("SSL_CERT_FILE");
+
+    if ((SSL_CERT_FILE != NULL) && (SSL_CERT_FILE[0] != '\0')) {
+        // https://curl.se/libcurl/c/CURLOPT_CAINFO.html
+        curl_easy_setopt(curl, CURLOPT_CAINFO, SSL_CERT_FILE);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    const char * const SSL_CERT_DIR = getenv("SSL_CERT_DIR");
+
+    if ((SSL_CERT_DIR != NULL) && (SSL_CERT_DIR[0] != '\0')) {
+        // https://curl.se/libcurl/c/CURLOPT_CAPATH.html
+        curl_easy_setopt(curl, CURLOPT_CAPATH, SSL_CERT_DIR);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    const char * const DNS_SERVERS = getenv("CURLOPT_DNS_SERVERS");
+
+    if ((DNS_SERVERS != NULL) && (DNS_SERVERS[0] != '\0')) {
+        // https://curl.se/libcurl/c/CURLOPT_DNS_SERVERS.html
+        curl_easy_setopt(curl, CURLOPT_DNS_SERVERS, DNS_SERVERS);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
 
     CURLcode curlcode = curl_easy_perform(curl);
     
