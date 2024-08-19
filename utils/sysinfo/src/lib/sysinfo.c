@@ -700,6 +700,10 @@ void sysinfo_dump(SysInfo * sysinfo) {
 }
 
 void sysinfo_free(SysInfo * sysinfo) {
+    if (sysinfo == NULL) {
+        return;
+    }
+
     if (sysinfo->arch != NULL) {
         free(sysinfo->arch);
         sysinfo->arch = NULL;

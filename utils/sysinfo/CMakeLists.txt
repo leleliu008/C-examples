@@ -29,9 +29,9 @@ target_include_directories(sysinfo PRIVATE src/lib)
 
 include(GNUInstallDirs)
 
-install(TARGETS sysinfo RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS sysinfo RUNTIME   COMPONENT bin DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-install(FILES   src/lib/sysinfo.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES   src/lib/sysinfo.h COMPONENT dev DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 ########################################################################################
 
@@ -39,6 +39,7 @@ configure_file(src/lib/sysinfo.pc.in sysinfo.pc @ONLY)
 install(
     FILES       "${CMAKE_CURRENT_BINARY_DIR}/sysinfo.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+    COMPONENT dev
 )
 
 ########################################################################################
@@ -49,6 +50,7 @@ install(
     TARGETS     sysinfo-static sysinfo-shared
     EXPORT      sysinfoTargets
     ARCHIVE
+    COMPONENT   lib
     DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
@@ -56,6 +58,7 @@ install(
     EXPORT      sysinfoTargets
     FILE        sysinfoTargets.cmake
     NAMESPACE   sysinfo::
+    COMPONENT   dev
     DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
 )
 
@@ -70,7 +73,9 @@ write_basic_package_version_file(
 )
 install(
     FILES       "${CMAKE_CURRENT_BINARY_DIR}/sysinfoConfigVersion.cmake"
-    DESTINATION "${CMAKE_INSTALL_CONFIGDIR}")
+    DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
+    COMPONENT dev
+)
 
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/src/lib/sysinfoConfig.cmake.in"
@@ -80,6 +85,7 @@ configure_package_config_file(
 install(
     FILES "${CMAKE_CURRENT_BINARY_DIR}/sysinfoConfig.cmake"
     DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
+    COMPONENT dev
 )
 
 ########################################################################################
