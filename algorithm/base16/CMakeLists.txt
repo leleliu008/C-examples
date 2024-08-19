@@ -33,10 +33,9 @@ target_include_directories(base16-decode PRIVATE src/lib)
 
 include(GNUInstallDirs)
 
-install(TARGETS base16-encode RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS base16-decode RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS base16-encode base16-decode RUNTIME COMPONENT bin DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-install(FILES   src/lib/base16.h       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES   src/lib/base16.h                    COMPONENT dev DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 ########################################################################################
 
@@ -44,6 +43,7 @@ configure_file(src/lib/base16.pc.in base16.pc @ONLY)
 install(
     FILES       "${CMAKE_CURRENT_BINARY_DIR}/base16.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+    COMPONENT dev
 )
 
 ########################################################################################
@@ -51,16 +51,17 @@ install(
 set(CMAKE_INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/base16")
 
 install(
-    TARGETS     base16-static base16-shared
-    EXPORT      base16Targets
-    ARCHIVE
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    TARGETS   base16-static base16-shared
+    EXPORT    base16Targets
+    ARCHIVE   COMPONENT lib DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY   COMPONENT lib DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 install(
     EXPORT      base16Targets
     FILE        base16Targets.cmake
     NAMESPACE   base16::
+    COMPONENT   dev
     DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
 )
 
@@ -75,7 +76,9 @@ write_basic_package_version_file(
 )
 install(
     FILES       "${CMAKE_CURRENT_BINARY_DIR}/base16ConfigVersion.cmake"
-    DESTINATION "${CMAKE_INSTALL_CONFIGDIR}")
+    DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
+    COMPONENT dev
+)
 
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/src/lib/base16Config.cmake.in"
@@ -85,6 +88,7 @@ configure_package_config_file(
 install(
     FILES "${CMAKE_CURRENT_BINARY_DIR}/base16Config.cmake"
     DESTINATION "${CMAKE_INSTALL_CONFIGDIR}"
+    COMPONENT dev
 )
 
 ########################################################################################
