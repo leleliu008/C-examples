@@ -47,11 +47,10 @@ install(
 set(CMAKE_INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/sysinfo")
 
 install(
-    TARGETS     sysinfo-static sysinfo-shared
-    EXPORT      sysinfoTargets
-    ARCHIVE
-    COMPONENT   lib
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    TARGETS  sysinfo-static sysinfo-shared
+    EXPORT   sysinfoTargets
+    ARCHIVE  COMPONENT lib DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY  COMPONENT lib DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 install(
