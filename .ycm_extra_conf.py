@@ -92,6 +92,8 @@ flags = [
 '-I',
 './library/qrencode/src/include',
 '-I',
+'./library/libcares/src',
+'-I',
 './library/cJSON',
 '-I',
 '/home/linuxbrew/.linuxbrew/include/',
