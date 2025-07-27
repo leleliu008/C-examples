@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
 #include <sys/stat.h>
 
@@ -82,26 +83,28 @@ int selfpath(char buf[]) {
 
     //////////////////////////////////
 
-    const char * argv0 = argv[0];
-    const char * p = argv[0];
+    size_t i;
 
     int ispath = 0;
 
-    for (;;) {
-        if (p[0] == '\0') {
-            break;
-        }
-
-        if (p[0] == '/') {
+    for (i = 0U; argv[0][i] != '\0'; i++) {
+        if (argv[0][i] == '/') {
             ispath = 1;
-            break;
         }
-
-        p++;
     }
 
+    char argv0[i];
+
+    for (j = 0U; j <= i; j++) {
+        argv0[j] = argv[0][j];
+    }
+
+    free(argv);
+
+    //////////////////////////////////
+
     if (ispath == 1) {
-        if (realpath(p, buf) == NULL) {
+        if (realpath(argv0, buf) == NULL) {
             return -1;
         } else {
             return 0;
