@@ -1,0 +1,30 @@
+name: codacy-analysis
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  codacy-analysis:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@main
+
+      - uses: codacy/codacy-analysis-cli-action@master
+        with:
+          output: results.sarif
+          format: sarif
+          # Adjust severity of non-security issues
+          gh-code-scanning-compat: true
+          # Force 0 exit code to allow SARIF file generation
+          # This will handover control about PR rejection to the GitHub side
+          max-allowed-issues: 2147483647
+
+      - uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: results.sarif

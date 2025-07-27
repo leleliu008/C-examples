@@ -1,0 +1,37 @@
+name: build via vcpkg on macOS
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  macos:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [15, 14, 13]
+
+    runs-on: macos-${{ matrix.version }}
+
+    steps:
+      - uses: actions/checkout@main
+
+      - run:  brew update
+      - run:  brew install cmake ninja tree
+
+      - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
+      - run:  echo "PATH=$VCPKG_ROOT:$PATH"       >> "$GITHUB_ENV"
+      - run:  install -d $VCPKG_ROOT
+      - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
+      - run:  cd $VCPKG_ROOT && ./bootstrap-vcpkg.sh
+      - run:  vcpkg install curl openssl libyaml libgit2 libarchive libqrencode
+
+      - run:  cmake --version
+      - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=OFF -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
+      - run:  cmake --build   build.d
+      - run:  cmake --install build.d
+      - run:  tree output

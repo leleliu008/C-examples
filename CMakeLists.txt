@@ -45,3 +45,5 @@ add_subdirectory(library/libcurl)
 add_subdirectory(library/libgit2)
 add_subdirectory(library/libarchive)
 add_subdirectory(library/qrencode)
+
+add_subdirectory(utils/self_exe_path)

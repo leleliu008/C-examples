@@ -1,0 +1,42 @@
+name: build via vcpkg on ubuntu
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  ubuntu:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [24.04, 22.04]
+
+    runs-on:   ubuntu-latest
+    container: ubuntu:${{ matrix.tag }}
+
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      TZ: Europe/London
+
+    steps:
+      - uses: actions/checkout@main
+
+      - run:  apt -y update
+      - run:  apt -y install pkg-config g++ linux-headers-generic cmake ninja-build tree git curl zip unzip tar
+
+      - run:  echo "VCPKG_ROOT=$HOME/.vcpkg/root" >> "$GITHUB_ENV"
+      - run:  echo "PATH=$VCPKG_ROOT:$PATH"       >> "$GITHUB_ENV"
+      - run:  install -d $VCPKG_ROOT
+      - run:  git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
+      - run:  cd $VCPKG_ROOT && ./bootstrap-vcpkg.sh
+      - run:  vcpkg install curl openssl libyaml libgit2 libarchive libqrencode
+
+      - run:  cmake --version
+      - run:  cmake -S . -B   build.d -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX=./output -DBUILD_TESTING=OFF -DCMAKE_COLOR_MAKEFILE=ON -DCMAKE_VERBOSE_MAKEFILE=ON
+      - run:  cmake --build   build.d
+      - run:  cmake --install build.d
+      - run:  tree output
