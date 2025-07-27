@@ -1,0 +1,36 @@
+name: FreeBSD
+
+on:
+  push:
+    branches: [ master, dev, tmp ]
+  pull_request:
+    branches: [ master, dev, tmp ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        freebsd-version: ['14.3', '14.2', '14.1', '14.0', '13.5', '13.4', '13.3', '13.2']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cross-platform-actions/action@master
+        with:
+          operating_system: freebsd
+          version: ${{ matrix.freebsd-version }}
+          shell: bash
+          run: |
+            run() {
+              printf "\033[0;35m==>\033[0m \033[0;32m%b\n\033[0m" "$*"
+              eval "$@"
+            }
+
+            run ./ppkg setup --syspm
+            run ./ppkg about
+            run ./ppkg update
+            run ./ppkg install c-examples
+            run ~/.ppkg/installed/freebsd-${{ matrix.freebsd-version }}-amd64/c-examples/bin/self_exe_path
