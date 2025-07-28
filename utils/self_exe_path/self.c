@@ -83,19 +83,19 @@ int selfpath(char buf[]) {
 
     //////////////////////////////////
 
-    size_t n;
+    size_t m = 0U;
 
     int ispath = 0;
 
-    for (n = 0U; argv[0][n] != '\0'; n++) {
-        if (argv[0][n] == '/') {
+    for ( ; argv[0][m] != '\0'; m++) {
+        if (argv[0][m] == '/') {
             ispath = 1;
         }
     }
 
-    char argv0[n];
+    char argv0[m];
 
-    for (size_t j = 0U; j <= n; j++) {
+    for (size_t j = 0U; j <= m; j++) {
         argv0[j] = argv[0][j];
     }
 
