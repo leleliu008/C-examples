@@ -107,7 +107,7 @@ int selfpath(char buf[]) {
         if (realpath(argv0, buf) == NULL) {
             return -1;
         } else {
-            return 0;
+            return strlen(buf);
         }
     }
 
