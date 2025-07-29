@@ -20,4 +20,4 @@ add_executable(getexepath getexepath.c)
 
 include(GNUInstallDirs)
 
-install(TARGETS self_exe_path RUNTIME   COMPONENT bin DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS self_exe_path getexepath RUNTIME COMPONENT bin DESTINATION ${CMAKE_INSTALL_BINDIR})
