@@ -41,3 +41,4 @@ jobs:
             run ./ppkg update
             run ./ppkg install c-examples
             run ~/.ppkg/installed/netbsd-${{ matrix.netbsd-version }}-amd64/c-examples/bin/self_exe_path
+            run ~/.ppkg/installed/netbsd-${{ matrix.netbsd-version }}-amd64/c-examples/bin/getexepath

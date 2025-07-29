@@ -36,3 +36,4 @@ jobs:
       - run:  cmake --install build.d
       - run:  tree output
       - run:  output/bin/self_exe_path
+      - run:  output/bin/getexepath
