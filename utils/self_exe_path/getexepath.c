@@ -126,8 +126,8 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
         return -1;
     }
 
-    if (chdir("/usr/local") == -1) {
-        perror("/usr/local");
+    if (chdir("/usr/") == -1) {
+        perror("/usr/");
         return -1;
     }
 
