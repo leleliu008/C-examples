@@ -1,9 +1,7 @@
-#include <_stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <sys/syslimits.h>
 #include <unistd.h>
 #include <limits.h>
 #include <sys/stat.h>
