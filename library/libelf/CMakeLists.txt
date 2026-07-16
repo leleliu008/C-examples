@@ -35,4 +35,4 @@ target_link_libraries(print-rpath  LIBELF::libelf)
 
 include(GNUInstallDirs)
 
-install(TARGETS check-if-has-dynamic-section RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS check-if-has-dynamic-section print-interpreter print-soname print-needed print-rpath RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
