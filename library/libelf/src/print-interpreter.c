@@ -58,7 +58,28 @@ int main(int argc, char* argv[]) {
             return 7;
         }
 
-        if (phdr.p_type == PT_DYNAMIC) {
+        if (phdr.p_type == PT_INTERP) {
+            char interp[phdr.p_filesz];
+
+            int ret = pread(fd, interp, phdr.p_filesz, phdr.p_offset);
+
+            if (ret == -1) {
+                perror(argv[1]);
+                elf_end(elf);
+                close(fd);
+                return 8;
+            }
+
+            if ((size_t)ret != phdr.p_filesz) {
+                perror(argv[1]);
+                elf_end(elf);
+                close(fd);
+                fprintf(stderr, "not fully read.\n");
+                return 9;
+            }
+
+            puts(interp);
+
             elf_end(elf);
             close(fd);
             return 0;
@@ -67,7 +88,5 @@ int main(int argc, char* argv[]) {
 
     elf_end(elf);
     close(fd);
-
-    fprintf(stderr, "no .dynamic section in file: %s\n", argv[1]);
-    return 200;
+    return 0;
 }

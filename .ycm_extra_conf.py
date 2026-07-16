@@ -31,6 +31,8 @@
 import os
 import ycm_core
 
+import os.path as p
+
 # These are the compilation flags that will be used in case there's no
 # compilation database set (by default, one is not set).
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
@@ -104,6 +106,14 @@ flags = [
 '-isystem',
 '/home/leleliu008/.vcpkg/root/installed/x64-linux/include',
 ]
+
+packahe_installed_root = p.expanduser('~') + '/.ppkg/installed/linux-glibc-x86_64/'
+
+packages = [ "libarchive", "libcurl", "libgit2", "libyaml", "libjansson", "libopenssl", "libz", "libelf" ]
+
+for package in packages:
+    flags.append("-I")
+    flags.append(packahe_installed_root + package + '/include')
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
 # compile_commands.json file to use that instead of 'flags'. See here for

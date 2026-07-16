@@ -20,7 +20,16 @@ endif()
 ##########################################
 
 add_executable(check-if-has-dynamic-section src/check-if-has-dynamic-section.c)
+add_executable(print-interpreter src/print-interpreter.c)
+add_executable(print-soname src/print-soname.c)
+add_executable(print-needed src/print-needed.c)
+add_executable(print-rpath  src/print-rpath.c)
+
 target_link_libraries(check-if-has-dynamic-section LIBELF::libelf)
+target_link_libraries(print-interpreter LIBELF::libelf)
+target_link_libraries(print-soname LIBELF::libelf)
+target_link_libraries(print-needed LIBELF::libelf)
+target_link_libraries(print-rpath  LIBELF::libelf)
 
 ##########################################
 
