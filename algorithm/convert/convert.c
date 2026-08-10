@@ -2,14 +2,14 @@
  * 使用gdb等调试器调试，观察变量的地址宽度
  */
 
-int main() {
+int main()
+{
 	char a = 'A';
 	char b = 'a';
-	char tmp;
-
-	tmp = a;
-	a = b;
-	b = tmp;
+	
+	a=a^b;
+	b=a^b;
+	a=a^b;
 
 	return 0;
 }
